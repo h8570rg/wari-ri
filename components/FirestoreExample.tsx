@@ -6,7 +6,6 @@ import {
   addDocument,
   updateDocument,
   deleteDocument,
-  getDocument,
 } from "@/lib/firestore";
 
 interface SampleItem {
