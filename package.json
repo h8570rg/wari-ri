@@ -1,39 +1,25 @@
 {
-  "name": "my-app",
+  "name": "wari-ri",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "npm run lint:next && npm:lint:prettier",
-    "lint:next": "next lint",
-    "lint:prettier": "prettier --check --ignore-path .gitignore .",
-    "lint:fix": "npm run lint:next -- --fix && npm run lint:prettier -- --write"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@genkit-ai/googleai": "^1.15.2",
-    "cookies-next": "^6.1.0",
-    "firebase": "^12.0.0",
-    "genkit": "^1.15.2",
-    "next": "15.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "server-only": "^0.0.1"
-  },
-  "browser": {
-    "fs": false,
-    "os": false,
-    "path": false,
-    "child_process": false,
-    "net": false,
-    "tls": false
+    "next": "15.4.2"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "15.4.2",
-    "eslint": "^9.31.0",
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
     "eslint-config-next": "15.4.2",
-    "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.6.2"
+    "@eslint/eslintrc": "^3"
   }
 }
