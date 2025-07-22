@@ -24,8 +24,7 @@ export const productionConfig: FirebaseConfig = {
 
 // 環境に基づいて設定を取得
 export const getFirebaseConfig = (): FirebaseConfig => {
-  const environment =
-    process.env.NEXT_PUBLIC_ENVIRONMENT || process.env.NODE_ENV;
+  const environment = process.env.NEXT_PUBLIC_ENVIRONMENT || "development";
 
   switch (environment) {
     case "production":
@@ -40,10 +39,7 @@ export const getFirebaseConfig = (): FirebaseConfig => {
 
 // 現在の環境を確認するヘルパー
 export const getCurrentEnvironment = () => {
-  const env =
-    process.env.NEXT_PUBLIC_ENVIRONMENT ||
-    process.env.NODE_ENV ||
-    "development";
+  const env = process.env.NEXT_PUBLIC_ENVIRONMENT || "development";
   return {
     isDevelopment: env === "development",
     isProduction: env === "production",
