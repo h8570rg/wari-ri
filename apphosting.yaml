@@ -7,7 +7,7 @@ runConfig:
   # cpu: 1
   # memoryMiB: 512
 
-# Environment variables and secrets.
+  # Environment variables and secrets.
 env:
   # Configure environment variables.
   # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
@@ -15,13 +15,7 @@ env:
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
     secret: FIREBASE_API_KEY
-    availability:
-      - BUILD
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
     secret: FIREBASE_PROJECT_ID
-    availability:
-      - BUILD
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     secret: FIREBASE_APP_ID
-    availability:
-      - BUILD
