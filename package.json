@@ -9,18 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/core": "^8.2.1",
+    "@mantine/hooks": "^8.2.1",
     "firebase": "^12.0.0",
-    "next": "15.4.2",
+    "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
-    "@types/node": "20.19.9",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "9.31.0",
-    "eslint-config-next": "15.4.2",
+    "@types/node": "22.16.5",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "eslint": "9.32.0",
+    "eslint-config-next": "15.4.4",
+    "postcss": "8.5.6",
+    "postcss-preset-mantine": "1.18.0",
+    "postcss-simple-vars": "7.0.1",
     "typescript": "5.8.3"
   },
   "engines": {
@@ -29,6 +34,6 @@
   },
   "volta": {
     "node": "22.17.1",
-    "npm": "11.4.2"
+    "npm": "11.5.1"
   }
 }
