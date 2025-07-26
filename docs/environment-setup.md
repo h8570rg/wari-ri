@@ -1,23 +1,27 @@
 # Firebase 環境設定ガイド
 
 ## 🎯 概要
+
 開発環境と本番環境を分離して安全にFirebaseを使用するための設定方法です。
 
 ## 📋 Firebase Console での作業
 
 ### 1. 新しい開発用プロジェクトを作成
+
 ```
 本番： wari-ri-production（既存）
 開発： wari-ri-development（新規作成）
 ```
 
 ### 2. 各プロジェクトでWebアプリを追加
+
 - Firebase Console → プロジェクト設定 → 全般 → アプリを追加
 - プラットフォーム：Web
 - アプリ名：適当な名前（例：Wari-Ri Web App）
 - Firebase Hosting は不要（Skip）
 
 ### 3. 各プロジェクトでFirestoreを有効化
+
 - Firebase Console → Firestore Database → データベースを作成
 - セキュリティルール：テスト用（開発環境）、本番用（本番環境）
 
@@ -26,6 +30,7 @@
 ### 環境変数ファイル
 
 #### 開発環境用 `.env.local`
+
 ```env
 # 開発環境設定
 NEXT_PUBLIC_ENVIRONMENT=development
@@ -35,6 +40,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_dev_app_id_here
 ```
 
 #### 本番環境用 `.env.production.local`
+
 ```env
 # 本番環境設定
 NEXT_PUBLIC_ENVIRONMENT=production
@@ -46,11 +52,13 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_prod_app_id_here
 ## 🔧 使用方法
 
 ### 開発時
+
 ```bash
 npm run dev  # 自動的に .env.local を使用
 ```
 
 ### 本番ビルド
+
 ```bash
 npm run build  # .env.production.local を使用
 npm run start
@@ -59,6 +67,7 @@ npm run start
 ## 🛡️ セキュリティルール
 
 ### 開発環境（制限なし）
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -71,6 +80,7 @@ service cloud.firestore {
 ```
 
 ### 本番環境（厳密）
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -79,7 +89,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    
+
     // パブリックデータ
     match /public/{document} {
       allow read: if true;
@@ -106,4 +116,4 @@ service cloud.firestore {
 - **絶対に** 本番環境の設定で開発・テストしない
 - 環境変数ファイルは `.gitignore` に含める
 - API キーは公開リポジトリにコミットしない
-- 定期的にFirebase Consoleで両環境のデータを確認する 
+- 定期的にFirebase Consoleで両環境のデータを確認する
