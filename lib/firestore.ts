@@ -25,7 +25,7 @@ export interface BaseDocument {
 
 // コレクション全体を取得
 export const getAllDocuments = async (
-  collectionName: string
+  collectionName: string,
 ): Promise<DocumentData[]> => {
   try {
     const querySnapshot = await getDocs(collection(db, collectionName));
@@ -42,7 +42,7 @@ export const getAllDocuments = async (
 // 特定のドキュメントを取得
 export const getDocument = async (
   collectionName: string,
-  docId: string
+  docId: string,
 ): Promise<DocumentData | null> => {
   try {
     const docRef = doc(db, collectionName, docId);
@@ -65,7 +65,7 @@ export const getDocument = async (
 // 新しいドキュメントを追加
 export const addDocument = async (
   collectionName: string,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): Promise<string> => {
   try {
     const docRef = await addDoc(collection(db, collectionName), {
@@ -84,7 +84,7 @@ export const addDocument = async (
 export const updateDocument = async (
   collectionName: string,
   docId: string,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): Promise<void> => {
   try {
     const docRef = doc(db, collectionName, docId);
@@ -101,7 +101,7 @@ export const updateDocument = async (
 // ドキュメントを削除
 export const deleteDocument = async (
   collectionName: string,
-  docId: string
+  docId: string,
 ): Promise<void> => {
   try {
     const docRef = doc(db, collectionName, docId);
@@ -118,7 +118,7 @@ export const getDocumentsWithQuery = async (
   conditions: { field: string; operator: WhereFilterOp; value: unknown }[] = [],
   orderByField?: string,
   orderDirection: "asc" | "desc" = "desc",
-  limitCount?: number
+  limitCount?: number,
 ): Promise<DocumentData[]> => {
   try {
     let q: Query<DocumentData> = collection(db, collectionName);

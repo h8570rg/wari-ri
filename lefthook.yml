@@ -1,5 +1,5 @@
 pre-commit:
-  parallel: true
+  parallel: false
   jobs:
     - name: "Next.js Lint"
       run: "npm run lint -- --fix --file {staged_files}"
@@ -8,3 +8,7 @@ pre-commit:
 
     - name: "TypeScript Type Check"
       run: "npm run typecheck"
+
+    - name: "Prettier Format"
+      run: "npm run format:target -- {staged_files}"
+      stage_fixed: true
