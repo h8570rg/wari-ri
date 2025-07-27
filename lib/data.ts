@@ -7,10 +7,16 @@ import {
 
 const groupCollectionName = "groups";
 
-export type GroupDocument = BaseDocument;
+export type GroupDocument = BaseDocument & {
+  name: string;
+  userNames: string[];
+};
 
-export async function createGroup() {
-  return addDocument<GroupDocument>(groupCollectionName, {});
+export async function createGroup(name: string, userNames: string[]) {
+  return addDocument<GroupDocument>(groupCollectionName, {
+    name,
+    userNames,
+  });
 }
 
 export async function getAllGroups() {
