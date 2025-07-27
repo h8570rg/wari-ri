@@ -1,4 +1,4 @@
-import { createTheme, MantineTheme } from "@mantine/core";
+import { createTheme } from "@mantine/core";
 
 export const theme = createTheme({
   // プライマリカラー（緑系を割り勘アプリのメインカラーとして設定）
