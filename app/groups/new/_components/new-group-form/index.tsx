@@ -17,7 +17,7 @@ export function NewGroupForm() {
   const form = useForm({
     initialValues: {
       name: "",
-      userNames: [] as { userName: string }[],
+      userNames: [] as string[],
     },
     validate: zod4Resolver(newGroupSchema),
   });
@@ -25,7 +25,7 @@ export function NewGroupForm() {
   const handleSubmit = async (values: typeof form.values) => {
     await createGroup({
       name: values.name,
-      userNames: values.userNames.map((user) => user.userName),
+      userNames: values.userNames,
     });
   };
 
@@ -60,21 +60,18 @@ export function NewGroupForm() {
               onClick={() => {
                 const userNameValue = userNameForm.getValues().userName;
                 const userNamesValue = form.getValues().userNames;
-                if (
-                  userNamesValue.some((user) => user.userName === userNameValue)
-                ) {
+                if (userNamesValue.includes(userNameValue)) {
                   userNameForm.setFieldError(
                     "userName",
                     "ユーザー名が重複しています",
                   );
                   return;
                 }
-
                 const validateResult = userNameForm.validateField("userName");
                 if (validateResult.hasError) {
                   return;
                 }
-                form.insertListItem("userNames", { userName: userNameValue });
+                form.insertListItem("userNames", userNameValue);
                 userNameForm.reset();
                 form.clearFieldError("userNames");
               }}
@@ -85,16 +82,16 @@ export function NewGroupForm() {
         )}
       />
       <Flex mt="xs">
-        {form.values.userNames.map((user, index) => (
+        {form.values.userNames.map((userName, index) => (
           <Pill
-            key={user.userName}
+            key={`${userName}-${index}`}
             size="md"
             withRemoveButton
             onRemove={() => {
               form.removeListItem("userNames", index);
             }}
           >
-            {user.userName}
+            {userName}
           </Pill>
         ))}
       </Flex>

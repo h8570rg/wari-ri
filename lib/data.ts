@@ -9,13 +9,18 @@ const groupCollectionName = "groups";
 
 export type GroupDocument = BaseDocument & {
   name: string;
-  userNames: string[];
+  users: { id: string; name: string }[];
 };
 
 export async function createGroup(name: string, userNames: string[]) {
+  const users = userNames.map((userName) => ({
+    id: crypto.randomUUID(),
+    name: userName,
+  }));
+
   return addDocument<GroupDocument>(groupCollectionName, {
     name,
-    userNames,
+    users,
   });
 }
 
