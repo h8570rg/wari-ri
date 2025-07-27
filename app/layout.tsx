@@ -1,6 +1,7 @@
 import "@mantine/core/styles.css";
 import {
   ColorSchemeScript,
+  Container,
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
@@ -24,7 +25,9 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <Container size="xs">{children}</Container>
+        </MantineProvider>
       </body>
     </html>
   );
