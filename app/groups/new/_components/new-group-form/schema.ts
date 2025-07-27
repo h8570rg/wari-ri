@@ -10,12 +10,6 @@ export const userNameSchema = z.object({
 export const newGroupSchema = z.object({
   name: z.string().min(1, { message: "グループ名を入力してください" }),
   userNames: z
-    .array(
-      z.object({
-        userName: z
-          .string()
-          .min(1, { message: "メンバー名を入力してください" }),
-      }),
-    )
+    .array(z.string().min(1, { message: "メンバー名を入力してください" }))
     .min(1, { message: "メンバーを1人以上入力してください" }),
 });
