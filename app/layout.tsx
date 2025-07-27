@@ -4,6 +4,7 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
+import { theme } from "@/lib/theme";
 
 import { Metadata } from "next";
 
@@ -23,7 +24,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider theme={theme}>{children}</MantineProvider>
       </body>
     </html>
   );
