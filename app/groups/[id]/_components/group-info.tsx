@@ -1,10 +1,8 @@
-import { getGroup } from "@/lib/data";
+import { GroupDocument } from "@/lib/data";
 import { Avatar, Card, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import { IconUsers } from "@tabler/icons-react";
 
-export async function GroupInfo({ id }: { id: string }) {
-  const group = await getGroup(id);
-
+export async function GroupInfo({ group }: { group: GroupDocument }) {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Stack gap="md">
