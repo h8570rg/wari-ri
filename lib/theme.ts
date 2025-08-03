@@ -5,21 +5,7 @@ export const theme = createTheme({
   primaryColor: "green",
 
   // カラーパレット
-  colors: {
-    // カスタム緑色パレット（割り勘をイメージした温かみのある色）
-    brand: [
-      "#f0fff4",
-      "#dcf4e6",
-      "#b8e6cc",
-      "#90d9b0",
-      "#6ccf98",
-      "#4fc786",
-      "#38c274",
-      "#26a65b",
-      "#1e8f4f",
-      "#157841",
-    ],
-  },
+  colors: {},
 
   // デフォルトの半径を設定
   defaultRadius: "md",
