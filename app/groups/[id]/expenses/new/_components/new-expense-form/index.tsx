@@ -32,7 +32,6 @@ export function NewExpenseForm({ group }: Props) {
   });
 
   const handleSubmit = async (values: typeof form.values) => {
-    console.debug(values);
     await createExpense({
       groupId: group.id,
       payerId: values.payerId,

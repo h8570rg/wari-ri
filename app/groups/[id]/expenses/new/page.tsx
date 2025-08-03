@@ -9,7 +9,5 @@ export default async function NewExpensePage({ params }: Props) {
   const { id } = await params;
   const group = await getGroup(id);
 
-  console.debug(group);
-
   return <NewExpenseForm group={group} />;
 }
