@@ -6,8 +6,9 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import { theme } from "@/lib/theme";
-
 import { Metadata } from "next";
+import { Header } from "./_components/header";
+import "./global.css";
 
 export const metadata: Metadata = {
   title: "ワリーリ",
@@ -26,6 +27,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme}>
+          <Header />
           <Container size="xs">{children}</Container>
         </MantineProvider>
       </body>

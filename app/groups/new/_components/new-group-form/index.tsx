@@ -29,9 +29,6 @@ export function NewGroupForm() {
     });
   };
 
-  console.debug(form.errors);
-  console.debug(form.values);
-
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <TextInput
