@@ -6,6 +6,9 @@ import {
   getAllDocuments,
   getAllSubcollectionDocuments,
   getDocument,
+  getSubcollectionDocument,
+  updateSubcollectionDocument,
+  deleteSubcollectionDocument,
 } from "./firestore";
 const groupCollectionName = "groups";
 const expenseSubcollectionName = "expenses";
@@ -77,5 +80,56 @@ export async function getExpensesByGroup(groupId: string) {
     groupCollectionName,
     groupId,
     expenseSubcollectionName,
+  );
+}
+
+export async function getExpense(groupId: string, expenseId: string) {
+  const data = await getSubcollectionDocument<ExpenseDocument>(
+    groupCollectionName,
+    groupId,
+    expenseSubcollectionName,
+    expenseId,
+  );
+  if (!data) {
+    notFound();
+  }
+  return data;
+}
+
+export async function updateExpense({
+  groupId,
+  expenseId,
+  payerId,
+  amount,
+  description,
+  participantIds,
+}: {
+  groupId: string;
+  expenseId: string;
+  payerId: string;
+  amount: number;
+  description: string;
+  participantIds: string[];
+}) {
+  return updateSubcollectionDocument<ExpenseDocument>(
+    groupCollectionName,
+    groupId,
+    expenseSubcollectionName,
+    expenseId,
+    {
+      payerId,
+      amount,
+      description,
+      participantIds,
+    },
+  );
+}
+
+export async function deleteExpense(groupId: string, expenseId: string) {
+  return deleteSubcollectionDocument(
+    groupCollectionName,
+    groupId,
+    expenseSubcollectionName,
+    expenseId,
   );
 }

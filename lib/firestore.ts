@@ -156,6 +156,42 @@ export async function deleteDocument<T extends BaseDocument>(
   await deleteDoc(doc(db, collectionName, documentId).withConverter(converter));
 }
 
+export async function updateSubcollectionDocument<T extends BaseDocument>(
+  parentCollectionName: string,
+  parentDocId: string,
+  subcollectionName: string,
+  docId: string,
+  data: Partial<Omit<T, "id" | "createdAt">>,
+) {
+  const docRef = doc(
+    db,
+    parentCollectionName,
+    parentDocId,
+    subcollectionName,
+    docId,
+  );
+  await updateDoc(docRef, {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function deleteSubcollectionDocument(
+  parentCollectionName: string,
+  parentDocId: string,
+  subcollectionName: string,
+  docId: string,
+) {
+  const docRef = doc(
+    db,
+    parentCollectionName,
+    parentDocId,
+    subcollectionName,
+    docId,
+  );
+  await deleteDoc(docRef);
+}
+
 export const createConverter = <T extends BaseDocument>() => ({
   toFirestore(value: WithFieldValue<T>) {
     return value;
