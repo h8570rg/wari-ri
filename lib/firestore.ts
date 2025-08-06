@@ -14,6 +14,8 @@ import {
   serverTimestamp,
   query,
   QueryConstraint,
+  onSnapshot,
+  Unsubscribe,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -156,6 +158,42 @@ export async function deleteDocument<T extends BaseDocument>(
   await deleteDoc(doc(db, collectionName, documentId).withConverter(converter));
 }
 
+export async function updateSubcollectionDocument<T extends BaseDocument>(
+  parentCollectionName: string,
+  parentDocId: string,
+  subcollectionName: string,
+  docId: string,
+  data: Partial<Omit<T, "id" | "createdAt">>,
+) {
+  const docRef = doc(
+    db,
+    parentCollectionName,
+    parentDocId,
+    subcollectionName,
+    docId,
+  );
+  await updateDoc(docRef, {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function deleteSubcollectionDocument(
+  parentCollectionName: string,
+  parentDocId: string,
+  subcollectionName: string,
+  docId: string,
+) {
+  const docRef = doc(
+    db,
+    parentCollectionName,
+    parentDocId,
+    subcollectionName,
+    docId,
+  );
+  await deleteDoc(docRef);
+}
+
 export const createConverter = <T extends BaseDocument>() => ({
   toFirestore(value: WithFieldValue<T>) {
     return value;
@@ -168,8 +206,33 @@ export const createConverter = <T extends BaseDocument>() => ({
       ...data,
       createdAt: data.createdAt.toDate(),
       updatedAt: data.updatedAt.toDate(),
+      // aggregation.lastCalculatedAtもDateに変換
+      ...(data.aggregation?.lastCalculatedAt && {
+        aggregation: {
+          ...data.aggregation,
+          lastCalculatedAt: data.aggregation.lastCalculatedAt.toDate(),
+        },
+      }),
     };
 
     return convertedData as T;
   },
 });
+
+// リアルタイムリスナー用の関数
+export function subscribeToDocument<T extends BaseDocument>(
+  collectionName: string,
+  docId: string,
+  callback: (data: T | null) => void,
+): Unsubscribe {
+  const converter = createConverter<T>();
+  const docRef = doc(db, collectionName, docId).withConverter(converter);
+
+  return onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      callback(docSnap.data());
+    } else {
+      callback(null);
+    }
+  });
+}

@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { IconUsers, IconCalculator, IconHeart } from "@tabler/icons-react";
 import NextLink from "next/link";
+import { RecentGroups } from "./_components/recent-groups";
 
 export default function RootPage() {
   return (
@@ -50,6 +51,8 @@ export default function RootPage() {
             割り勘グループを作成
           </Button>
         </Stack>
+
+        <RecentGroups />
 
         <Paper withBorder w="100%" maw={400}>
           <Stack gap="sm">

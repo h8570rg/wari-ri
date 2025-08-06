@@ -1,5 +1,15 @@
 import { getExpensesByGroup, getGroup } from "@/lib/data";
-import { Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
+import {
+  Avatar,
+  Card,
+  Group,
+  Stack,
+  Text,
+  Title,
+  ActionIcon,
+} from "@mantine/core";
+import { IconEdit } from "@tabler/icons-react";
+import Link from "next/link";
 
 type Props = {
   groupId: string;
@@ -32,9 +42,20 @@ export async function ExpenseList({ groupId }: Props) {
               <Card key={expense.id} padding="md" radius="sm" withBorder>
                 <Group justify="space-between" mb="xs">
                   <Text fw={500}>{expense.description}</Text>
-                  <Text fw={700} c="blue">
-                    ¥{expense.amount.toLocaleString()}
-                  </Text>
+                  <Group gap="xs">
+                    <Text fw={700} c="blue">
+                      ¥{expense.amount.toLocaleString()}
+                    </Text>
+                    <ActionIcon
+                      component={Link}
+                      href={`/groups/${groupId}/expenses/${expense.id}/edit`}
+                      variant="subtle"
+                      size="sm"
+                      color="gray"
+                    >
+                      <IconEdit size={16} />
+                    </ActionIcon>
+                  </Group>
                 </Group>
 
                 <Group gap="xs" mb="xs">

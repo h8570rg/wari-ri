@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import {
+  Box,
   ColorSchemeScript,
   Container,
   MantineProvider,
@@ -27,8 +28,17 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme}>
-          <Header />
-          <Container size="xs">{children}</Container>
+          <Box
+            style={{
+              backgroundImage:
+                "linear-gradient(225deg, white, var(--mantine-primary-color-1))",
+            }}
+          >
+            <Container size="xs" pt={0}>
+              <Header />
+              {children}
+            </Container>
+          </Box>
         </MantineProvider>
       </body>
     </html>

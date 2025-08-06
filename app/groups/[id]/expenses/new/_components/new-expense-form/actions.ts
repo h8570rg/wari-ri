@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createExpense as _createExpense } from "@/lib/data";
 
 export async function createExpense({
@@ -24,5 +25,6 @@ export async function createExpense({
     participantIds,
   });
 
+  revalidatePath(`/groups/${groupId}`);
   redirect(`/groups/${groupId}`);
 }
