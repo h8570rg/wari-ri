@@ -9,6 +9,7 @@ import {
   getSubcollectionDocument,
   updateSubcollectionDocument,
   deleteSubcollectionDocument,
+  updateDocument,
 } from "./firestore";
 const groupCollectionName = "groups";
 const expenseSubcollectionName = "expenses";
@@ -132,4 +133,24 @@ export async function deleteExpense(groupId: string, expenseId: string) {
     expenseSubcollectionName,
     expenseId,
   );
+}
+
+export async function updateGroup({
+  groupId,
+  name,
+  userNames,
+}: {
+  groupId: string;
+  name: string;
+  userNames: string[];
+}) {
+  const users = userNames.map((userName, index) => ({
+    id: `user-${index}`,
+    name: userName,
+  }));
+
+  return updateDocument<GroupDocument>(groupCollectionName, groupId, {
+    name,
+    users,
+  });
 }
