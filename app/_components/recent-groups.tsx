@@ -1,51 +1,75 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getRecentGroupIds, removeRecentGroupId } from "@/lib/local-storage";
+import {
+  getRecentGroups,
+  updateRecentGroup,
+  removeRecentGroup,
+  type RecentGroup,
+} from "@/lib/local-storage";
 import { getGroup } from "@/lib/data";
-import type { GroupDocument } from "@/lib/data";
 import { Button, Text, Stack, Paper, Group } from "@mantine/core";
 import { IconUsers, IconClock } from "@tabler/icons-react";
 import NextLink from "next/link";
 
 export function RecentGroups() {
-  const [recentGroups, setRecentGroups] = useState<GroupDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [recentGroups, setRecentGroups] = useState<RecentGroup[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function loadRecentGroups() {
-      // クライアントサイドでのみlocal storageから読み込む
-      const groupIds = getRecentGroupIds();
+    // 即座にlocal storageから表示用データを読み込み
+    const storedGroups = getRecentGroups();
+    setRecentGroups(storedGroups);
+    setIsLoading(false);
 
-      if (groupIds.length === 0) {
-        setIsLoading(false);
+    // 裏側でFirestoreからデータを取得し、差異があればlocal storageを更新
+    async function syncWithFirestore() {
+      if (storedGroups.length === 0) {
         return;
       }
 
-      // 各IDからグループ情報を取得
-      const groupPromises = groupIds.map(async (id) => {
+      const syncPromises = storedGroups.map(async (storedGroup) => {
         try {
-          return await getGroup(id);
+          const firestoreGroup = await getGroup(storedGroup.id);
+
+          // グループ名に差異がある場合、local storageを更新
+          if (firestoreGroup.name !== storedGroup.name) {
+            updateRecentGroup(storedGroup.id, firestoreGroup.name);
+            return {
+              ...storedGroup,
+              name: firestoreGroup.name,
+            };
+          }
+
+          return storedGroup;
         } catch {
-          removeRecentGroupId(id);
+          // グループが存在しない場合、local storageから削除
+          removeRecentGroup(storedGroup.id);
           return null;
         }
       });
 
-      const groups = await Promise.all(groupPromises);
-      // nullを除去
-      const validGroups = groups.filter(
-        (group): group is GroupDocument => group !== null,
+      const syncedGroups = await Promise.all(syncPromises);
+      const validGroups = syncedGroups.filter(
+        (group): group is RecentGroup => group !== null,
       );
 
-      setRecentGroups(validGroups);
-      setIsLoading(false);
+      // 同期後のデータで表示を更新
+      if (
+        validGroups.length !== storedGroups.length ||
+        validGroups.some(
+          (group, index) => group.name !== storedGroups[index]?.name,
+        )
+      ) {
+        setRecentGroups(validGroups);
+      }
     }
 
-    loadRecentGroups();
+    // 非同期で同期処理を実行（表示はブロックしない）
+    syncWithFirestore();
   }, []);
 
-  // サーバーサイドレンダリング時やロード中は何も表示しない
+  // サーバーサイドレンダリング時やグループが無い場合は何も表示しない
   if (isLoading || recentGroups.length === 0) {
     return null;
   }

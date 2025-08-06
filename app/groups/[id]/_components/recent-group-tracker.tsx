@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { addRecentGroupId } from "@/lib/local-storage";
+import { addRecentGroup } from "@/lib/local-storage";
 
-export function RecentGroupTracker({ groupId }: { groupId: string }) {
+export function RecentGroupTracker({
+  groupId,
+  groupName,
+}: {
+  groupId: string;
+  groupName: string;
+}) {
   useEffect(() => {
-    // グループページを閲覧した時にlocal storageにIDを保存
-    addRecentGroupId(groupId);
-  }, [groupId]);
+    // グループページを閲覧した時にlocal storageに情報を保存
+    addRecentGroup(groupId, groupName);
+  }, [groupId, groupName]);
 
   // このコンポーネントは見た目に影響しない
   return null;
