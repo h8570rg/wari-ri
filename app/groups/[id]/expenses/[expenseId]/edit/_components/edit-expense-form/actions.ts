@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import {
   updateExpense as _updateExpense,
   deleteExpense as _deleteExpense,
@@ -30,6 +31,7 @@ export async function updateExpense({
     participantIds,
   });
 
+  revalidatePath(`/groups/${groupId}`);
   redirect(`/groups/${groupId}`);
 }
 
@@ -42,5 +44,6 @@ export async function deleteExpense({
 }) {
   await _deleteExpense(groupId, expenseId);
 
+  revalidatePath(`/groups/${groupId}`);
   redirect(`/groups/${groupId}`);
 }

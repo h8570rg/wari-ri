@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "wari-ri"
-  }
+    "default": "wari-ri",
+    "dev": "wari-ri-dev"
+  },
+  "targets": {},
+  "etags": {}
 }

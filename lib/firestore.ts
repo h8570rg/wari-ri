@@ -14,6 +14,8 @@ import {
   serverTimestamp,
   query,
   QueryConstraint,
+  onSnapshot,
+  Unsubscribe,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -204,8 +206,33 @@ export const createConverter = <T extends BaseDocument>() => ({
       ...data,
       createdAt: data.createdAt.toDate(),
       updatedAt: data.updatedAt.toDate(),
+      // aggregation.lastCalculatedAtもDateに変換
+      ...(data.aggregation?.lastCalculatedAt && {
+        aggregation: {
+          ...data.aggregation,
+          lastCalculatedAt: data.aggregation.lastCalculatedAt.toDate(),
+        },
+      }),
     };
 
     return convertedData as T;
   },
 });
+
+// リアルタイムリスナー用の関数
+export function subscribeToDocument<T extends BaseDocument>(
+  collectionName: string,
+  docId: string,
+  callback: (data: T | null) => void,
+): Unsubscribe {
+  const converter = createConverter<T>();
+  const docRef = doc(db, collectionName, docId).withConverter(converter);
+
+  return onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      callback(docSnap.data());
+    } else {
+      callback(null);
+    }
+  });
+}
