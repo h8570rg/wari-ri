@@ -18,7 +18,7 @@ export function RecentGroups() {
       const groupIds = getRecentGroupIds();
 
       if (groupIds.length === 0) {
-        setIsLoading(true);
+        setIsLoading(false);
         return;
       }
 
