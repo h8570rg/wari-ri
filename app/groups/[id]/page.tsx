@@ -1,4 +1,4 @@
-import { getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
 import { Stack } from "@mantine/core";
 import { GroupInfo } from "./_components/group-info";
 import { AddExpenseButton } from "./_components/add-expense-button";
@@ -19,7 +19,7 @@ export default async function GroupPage({ params }: Props) {
       <RecentGroupTracker groupId={id} groupName={group.name} />
       <GroupInfo group={group} />
       <AddExpenseButton groupId={id} />
-      <SettlementSummary groupId={id} />
+      <SettlementSummary groupId={id} initialGroup={group} />
       <ActivityHistory groupId={id} />
     </Stack>
   );

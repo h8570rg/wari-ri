@@ -1,40 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { subscribeToDocument } from "../firestore";
-import { GroupDocument } from "../data";
+import { GroupDocument, subscribeToGroup } from "../data/group";
 
-export function useRealtimeGroup(groupId: string) {
-  const [group, setGroup] = useState<GroupDocument | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+export function useRealtimeGroup(groupId: string, initialGroup: GroupDocument) {
+  const [group, setGroup] = useState<GroupDocument>(initialGroup);
 
   useEffect(() => {
-    if (!groupId) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    const unsubscribe = subscribeToDocument<GroupDocument>(
-      "groups",
-      groupId,
-      (data) => {
-        if (data) {
-          setGroup(data);
-          setError(null);
-        } else {
-          setGroup(null);
-          setError(new Error("Group not found"));
-        }
-        setLoading(false);
-      },
-    );
-
+    const unsubscribe = subscribeToGroup(groupId, (data) => {
+      setGroup(data);
+    });
     return unsubscribe;
   }, [groupId]);
 
-  return { group, loading, error };
+  return { group };
 }

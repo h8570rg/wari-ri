@@ -22,6 +22,11 @@ interface UserBalance {
 interface GroupAggregation {
   totalExpenses: number;
   userBalances: { [userId: string]: UserBalance };
+  remainingSettlements: {
+    fromUserId: string;
+    toUserId: string;
+    amount: number;
+  }[];
 }
 
 interface ActivityData {
@@ -84,6 +89,107 @@ export const updateGroupAggregation = onDocumentWritten(
   },
 );
 
+// 残りの精算必要額を計算するヘルパー関数
+function calculateRemainingSettlements(
+  userBalances: { [userId: string]: UserBalance },
+  completedSettlements: ActivityData[],
+  users: Array<{ id: string; name: string }>,
+): {
+  fromUserId: string;
+  toUserId: string;
+  amount: number;
+}[] {
+  // 理論的な精算計算（債権者と債務者をマッチング）
+  const calculateTheoreticalSettlements = (): {
+    fromUserId: string;
+    toUserId: string;
+    amount: number;
+  }[] => {
+    const settlements: {
+      fromUserId: string;
+      toUserId: string;
+      amount: number;
+    }[] = [];
+
+    const creditors = users
+      .filter((user) => (userBalances[user.id]?.balance || 0) > 0.01)
+      .sort(
+        (a, b) =>
+          (userBalances[b.id]?.balance || 0) -
+          (userBalances[a.id]?.balance || 0),
+      );
+
+    const debtors = users
+      .filter((user) => (userBalances[user.id]?.balance || 0) < -0.01)
+      .sort(
+        (a, b) =>
+          (userBalances[a.id]?.balance || 0) -
+          (userBalances[b.id]?.balance || 0),
+      );
+
+    // 債権者と債務者のコピーを作成（計算で値を変更するため）
+    const remainingCreditors = creditors.map((c) => ({
+      userId: c.id,
+      balance: userBalances[c.id]?.balance || 0,
+    }));
+
+    const remainingDebtors = debtors.map((d) => ({
+      userId: d.id,
+      balance: userBalances[d.id]?.balance || 0,
+    }));
+
+    for (const debtor of remainingDebtors) {
+      let debtAmount = Math.abs(debtor.balance);
+
+      for (const creditor of remainingCreditors) {
+        if (debtAmount <= 0.01 || creditor.balance <= 0.01) continue;
+
+        const settlementAmount = Math.min(debtAmount, creditor.balance);
+
+        settlements.push({
+          fromUserId: debtor.userId,
+          toUserId: creditor.userId,
+          amount: Math.round(settlementAmount),
+        });
+
+        debtAmount -= settlementAmount;
+        creditor.balance -= settlementAmount;
+      }
+    }
+
+    return settlements;
+  };
+
+  const theoreticalSettlements = calculateTheoreticalSettlements();
+
+  // 完了済み精算額を計算する関数
+  const getCompletedAmount = (settlement: {
+    fromUserId: string;
+    toUserId: string;
+    amount: number;
+  }): number => {
+    return completedSettlements
+      .filter(
+        (completed) =>
+          completed.fromUserId === settlement.fromUserId &&
+          completed.toUserId === settlement.toUserId,
+      )
+      .reduce((sum, completed) => sum + completed.amount, 0);
+  };
+
+  // 残りの精算必要額を計算
+  return theoreticalSettlements
+    .map((settlement) => {
+      const completedAmount = getCompletedAmount(settlement);
+      const remainingAmount = Math.max(0, settlement.amount - completedAmount);
+      return {
+        ...settlement,
+        amount: remainingAmount,
+      };
+    })
+    .filter((settlement) => settlement.amount > 0);
+}
+
 // 集計計算のヘルパー関数
 function calculateAggregation(
   users: Array<{ id: string; name: string }>,
@@ -93,8 +199,11 @@ function calculateAggregation(
     (doc) => doc.data() as ActivityData,
   );
 
-  // 建て替え記録のみを取得
+  // 建て替え記録と精算記録を分離
   const expenses = activities.filter((activity) => activity.type === "expense");
+  const settlements = activities.filter(
+    (activity) => activity.type === "settlement",
+  );
 
   // 各ユーザーの収支を計算
   const userBalances: { [userId: string]: UserBalance } = {};
@@ -128,8 +237,16 @@ function calculateAggregation(
     0,
   );
 
+  // 精算進捗を考慮した残りの精算必要額を計算
+  const remainingSettlements = calculateRemainingSettlements(
+    userBalances,
+    settlements,
+    users,
+  );
+
   return {
     totalExpenses,
     userBalances,
+    remainingSettlements,
   };
 }

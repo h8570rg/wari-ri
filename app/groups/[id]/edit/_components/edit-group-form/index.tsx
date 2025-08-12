@@ -2,7 +2,7 @@
 
 import { updateGroup } from "./actions";
 import { editGroupSchema, userNameSchema } from "./schema";
-import { GroupDocument } from "@/lib/data";
+import { GroupDocument } from "@/lib/data/group";
 import {
   Button,
   Flex,
@@ -45,7 +45,7 @@ export function EditGroupForm({ group }: Props) {
   const form = useForm({
     initialValues: {
       name: group.name,
-      userNames: group.users.map((user) => user.name),
+      users: group.users,
     },
     validate: zod4Resolver(editGroupSchema),
   });
@@ -54,7 +54,7 @@ export function EditGroupForm({ group }: Props) {
     await updateGroup({
       groupId: group.id,
       name: values.name,
-      userNames: values.userNames,
+      users: values.users,
     });
   };
 
@@ -66,12 +66,12 @@ export function EditGroupForm({ group }: Props) {
 
   const handleUpdateMemberName = () => {
     const newName = editUserNameForm.getValues().userName;
-    const userNamesValue = form.getValues().userNames;
+    const usersValue = form.getValues().users;
 
     // 重複チェック（編集中のメンバー以外）
-    const otherNames = userNamesValue.filter(
-      (_, index) => index !== editingIndex,
-    );
+    const otherNames = usersValue
+      .filter((_, index) => index !== editingIndex)
+      .map((user) => user.name);
     if (otherNames.includes(newName)) {
       editUserNameForm.setFieldError("userName", "ユーザー名が重複しています");
       return;
@@ -82,7 +82,7 @@ export function EditGroupForm({ group }: Props) {
       return;
     }
 
-    form.setFieldValue(`userNames.${editingIndex}`, newName);
+    form.setFieldValue(`users.${editingIndex}.name`, newName);
     setEditModalOpened(false);
     setEditingIndex(null);
     editUserNameForm.reset();
@@ -117,14 +117,14 @@ export function EditGroupForm({ group }: Props) {
                 {...userNameForm.getInputProps("userName")}
                 error={
                   userNameForm.getInputProps("userName").error ??
-                  form.errors.userNames
+                  form.errors.users
                 }
               />
               <Button
                 onClick={() => {
                   const userNameValue = userNameForm.getValues().userName;
-                  const userNamesValue = form.getValues().userNames;
-                  if (userNamesValue.includes(userNameValue)) {
+                  const usersValue = form.getValues().users;
+                  if (usersValue.some((user) => user.name === userNameValue)) {
                     userNameForm.setFieldError(
                       "userName",
                       "ユーザー名が重複しています",
@@ -135,9 +135,13 @@ export function EditGroupForm({ group }: Props) {
                   if (validateResult.hasError) {
                     return;
                   }
-                  form.insertListItem("userNames", userNameValue);
+                  const newUser = {
+                    id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    name: userNameValue,
+                  };
+                  form.insertListItem("users", newUser);
                   userNameForm.reset();
-                  form.clearFieldError("userNames");
+                  form.clearFieldError("users");
                 }}
               >
                 追加
@@ -145,21 +149,21 @@ export function EditGroupForm({ group }: Props) {
             </Group>
           </div>
 
-          {form.values.userNames.length > 0 && (
+          {form.values.users.length > 0 && (
             <div>
               <Text size="sm" fw={500} mb="xs">
                 現在のメンバー（クリックで名前変更）
               </Text>
               <Flex gap="xs" wrap="wrap">
-                {form.values.userNames.map((userName, index) => (
+                {form.values.users.map((user, index) => (
                   <Pill
-                    key={`${userName}-${index}`}
+                    key={`${user.id}-${index}`}
                     size="md"
                     style={{ paddingRight: 4, cursor: "pointer" }}
-                    onClick={() => handleEditMember(index, userName)}
+                    onClick={() => handleEditMember(index, user.name)}
                   >
                     <Group gap={4} wrap="nowrap">
-                      <Text size="sm">{userName}</Text>
+                      <Text size="sm">{user.name}</Text>
                       <ActionIcon size="xs" variant="subtle" color="gray">
                         <IconEdit size={12} />
                       </ActionIcon>

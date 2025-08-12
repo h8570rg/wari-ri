@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import {
   updateExpense as _updateExpense,
   deleteExpense as _deleteExpense,
-} from "@/lib/data";
+} from "@/lib/data/expense";
 
 export async function updateExpense({
   groupId,

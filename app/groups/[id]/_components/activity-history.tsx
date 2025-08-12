@@ -1,4 +1,5 @@
-import { getActivityHistory, getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
+import { getActivities } from "@/lib/data/activity";
 import {
   Avatar,
   Card,
@@ -23,7 +24,7 @@ type Props = {
 
 export async function ActivityHistory({ groupId }: Props) {
   const [activities, group] = await Promise.all([
-    getActivityHistory(groupId),
+    getActivities(groupId),
     getGroup(groupId),
   ]);
 

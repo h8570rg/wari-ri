@@ -1,5 +1,6 @@
-import { getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
 import { EditGroupForm } from "./_components/edit-group-form";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ id: string }>;

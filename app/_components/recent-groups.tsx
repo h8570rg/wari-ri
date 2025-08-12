@@ -7,7 +7,7 @@ import {
   removeRecentGroup,
   type RecentGroup,
 } from "@/lib/local-storage";
-import { getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
 import { Button, Text, Stack, Paper, Group } from "@mantine/core";
 import { IconUsers, IconClock } from "@tabler/icons-react";
 import NextLink from "next/link";
@@ -30,20 +30,21 @@ export function RecentGroups() {
 
       const syncPromises = storedGroups.map(async (storedGroup) => {
         try {
-          const firestoreGroup = await getGroup(storedGroup.id);
+          const group = await getGroup(storedGroup.id);
 
           // グループ名に差異がある場合、local storageを更新
-          if (firestoreGroup.name !== storedGroup.name) {
-            updateRecentGroup(storedGroup.id, firestoreGroup.name);
+          if (group.name !== storedGroup.name) {
+            updateRecentGroup(storedGroup.id, group.name);
             return {
               ...storedGroup,
-              name: firestoreGroup.name,
+              name: group.name,
             };
           }
 
           return storedGroup;
         } catch {
           // グループが存在しない場合、local storageから削除
+
           removeRecentGroup(storedGroup.id);
           return null;
         }

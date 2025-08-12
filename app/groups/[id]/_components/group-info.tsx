@@ -1,4 +1,4 @@
-import { GroupDocument } from "@/lib/data";
+import { GroupDocument } from "@/lib/data/group";
 import {
   Avatar,
   Card,
