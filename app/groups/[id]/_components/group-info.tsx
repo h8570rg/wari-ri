@@ -1,14 +1,35 @@
-import { GroupDocument } from "@/lib/data";
-import { Avatar, Card, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import { IconUsers } from "@tabler/icons-react";
+import { GroupDocument } from "@/lib/data/group";
+import {
+  Avatar,
+  Card,
+  Flex,
+  Group,
+  Stack,
+  Text,
+  Title,
+  ActionIcon,
+} from "@mantine/core";
+import { IconUsers, IconEdit } from "@tabler/icons-react";
+import Link from "next/link";
 
 export async function GroupInfo({ group }: { group: GroupDocument }) {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Stack gap="md">
-        <Title order={1} size="h2" ta="center">
-          {group.name}
-        </Title>
+        <Group justify="center" gap="md">
+          <Title order={1} size="h2">
+            {group.name}
+          </Title>
+          <ActionIcon
+            component={Link}
+            href={`/groups/${group.id}/edit`}
+            variant="subtle"
+            size="lg"
+            color="gray"
+          >
+            <IconEdit size={20} />
+          </ActionIcon>
+        </Group>
         <Group gap="xs" justify="center">
           <IconUsers size={20} color="var(--mantine-color-dimmed)" />
           <Text size="sm" c="dimmed">

@@ -1,4 +1,4 @@
-import { getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
 import { NewExpenseForm } from "./_components/new-expense-form";
 
 type Props = {

@@ -1,0 +1,31 @@
+# ファイル
+*.svg
+
+# gitignoreファイルを除外
+.gitignore
+*/.gitignore
+
+# その他の設定ファイル
+*.md
+*.json
+*.yaml
+*.yml
+
+# ビルド成果物
+.next/
+dist/
+build/
+node_modules/
+
+# ログファイル
+*.log
+
+# 環境ファイル
+.env*
+
+# Firebase関連
+.firebaserc
+firebase.json
+firestore.rules
+
+.prettierignore

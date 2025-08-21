@@ -1,9 +1,10 @@
-import { getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
 import { Stack } from "@mantine/core";
 import { GroupInfo } from "./_components/group-info";
 import { AddExpenseButton } from "./_components/add-expense-button";
 import { SettlementSummary } from "./_components/settlement-summary";
-import { ExpenseList } from "./_components/expense-list";
+import { ActivityHistory } from "./_components/activity-history";
+import { RecentGroupTracker } from "./_components/recent-group-tracker";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -15,10 +16,11 @@ export default async function GroupPage({ params }: Props) {
 
   return (
     <Stack gap="lg">
+      <RecentGroupTracker groupId={id} groupName={group.name} />
       <GroupInfo group={group} />
       <AddExpenseButton groupId={id} />
-      <SettlementSummary groupId={id} />
-      <ExpenseList groupId={id} />
+      <SettlementSummary groupId={id} initialGroup={group} />
+      <ActivityHistory groupId={id} />
     </Stack>
   );
 }

@@ -2,7 +2,7 @@
 
 import { createExpense } from "./actions";
 import { newExpenseSchema } from "./schema";
-import { GroupDocument } from "@/lib/data";
+import { GroupDocument } from "@/lib/data/group";
 import {
   Button,
   Checkbox,
