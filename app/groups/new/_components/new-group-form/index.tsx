@@ -34,6 +34,7 @@ export function NewGroupForm() {
       <TextInput
         label="グループ名"
         placeholder="北海道旅行"
+        autoFocus
         {...form.getInputProps("name")}
       />
       <TextInput
@@ -78,11 +79,12 @@ export function NewGroupForm() {
           </Group>
         )}
       />
-      <Flex mt="xs">
+      <Pill.Group mt="xs">
         {form.values.userNames.map((userName, index) => (
           <Pill
             key={`${userName}-${index}`}
-            size="md"
+            size="lg"
+            bg="green.0"
             withRemoveButton
             onRemove={() => {
               form.removeListItem("userNames", index);
@@ -91,7 +93,7 @@ export function NewGroupForm() {
             {userName}
           </Pill>
         ))}
-      </Flex>
+      </Pill.Group>
       <Button
         type="submit"
         mt="lg"
