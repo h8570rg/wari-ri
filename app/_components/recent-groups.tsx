@@ -8,11 +8,11 @@ import {
   type RecentGroup,
 } from "@/lib/local-storage";
 import { getGroup } from "@/lib/data/group";
-import { Button, Text, Stack, Paper, Group } from "@mantine/core";
-import { IconUsers, IconClock } from "@tabler/icons-react";
+import { Button, Stack, StackProps } from "@mantine/core";
+import { IconChevronRight } from "@tabler/icons-react";
 import NextLink from "next/link";
 
-export function RecentGroups() {
+export function RecentGroups(props: StackProps) {
   const [recentGroups, setRecentGroups] = useState<RecentGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -76,43 +76,22 @@ export function RecentGroups() {
   }
 
   return (
-    <Paper withBorder w="100%" maw={400}>
-      <Stack gap="md">
-        <Group gap="xs">
-          <IconClock size={16} color="var(--mantine-color-green-6)" />
-          <Text size="sm" fw={600} c="green.7">
-            最近閲覧したグループ
-          </Text>
-        </Group>
-
-        <Stack gap="xs">
-          {recentGroups.map((group) => (
-            <Button
-              key={group.id}
-              component={NextLink}
-              href={`/groups/${group.id}`}
-              variant="subtle"
-              color="green"
-              leftSection={<IconUsers size={16} />}
-              justify="start"
-              size="sm"
-              styles={{
-                root: {
-                  height: "auto",
-                  padding: "8px 12px",
-                },
-                inner: {
-                  justifyContent: "flex-start",
-                },
-              }}
-            >
-              <Text size="sm" fw={500}>
-                {group.name}
-              </Text>
-            </Button>
-          ))}
-        </Stack>
-      </Stack>
-    </Paper>
+    <Stack gap="xs" w="100%" {...props}>
+      {recentGroups.map((group) => (
+        <Button
+          key={group.id}
+          component={NextLink}
+          href={`/groups/${group.id}`}
+          variant="outline"
+          color="white"
+          rightSection={<IconChevronRight size={16} />}
+          justify="space-between"
+          size="sm"
+          w="100%"
+        >
+          {group.name}
+        </Button>
+      ))}
+    </Stack>
   );
 }
