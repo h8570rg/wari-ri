@@ -1,4 +1,4 @@
-import { getGroup } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
 import { EditGroupForm } from "./_components/edit-group-form";
 
 type Props = {

@@ -1,6 +1,6 @@
 "use server";
 
-import { createSettlement as _createSettlement } from "@/lib/data";
+import { createSettlement as _createSettlement } from "@/lib/data/group";
 
 export async function createSettlement({
   groupId,

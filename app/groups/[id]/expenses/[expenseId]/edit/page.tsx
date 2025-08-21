@@ -1,4 +1,5 @@
-import { getGroup, getExpense } from "@/lib/data";
+import { getGroup } from "@/lib/data/group";
+import { getExpense } from "@/lib/data/expense";
 import { EditExpenseForm } from "./_components/edit-expense-form";
 
 type Props = {

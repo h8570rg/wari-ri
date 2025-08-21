@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createExpense as _createExpense } from "@/lib/data";
+import { createExpense as _createExpense } from "@/lib/data/expense";
 
 export async function createExpense({
   groupId,

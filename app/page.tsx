@@ -1,77 +1,140 @@
+"use client";
+
 import {
   Button,
   Container,
   Title,
   Text,
   Stack,
-  Paper,
-  Group,
-  ActionIcon,
+  Box,
+  Image,
 } from "@mantine/core";
-import { IconUsers, IconCalculator, IconHeart } from "@tabler/icons-react";
+import { IconPencil } from "@tabler/icons-react";
 import NextLink from "next/link";
+import NextImage from "next/image";
 import { RecentGroups } from "./_components/recent-groups";
+import HeroImage from "./image.svg";
+import SimpleImage from "./simple.svg";
+import UIImage from "./ui.svg";
+import FreeImage from "./free.svg";
 
 export default function RootPage() {
   return (
-    <Container>
-      <Stack gap="xl" align="center">
-        <Paper withBorder>
-          <Stack align="center" gap="md">
-            <Group gap="xs">
-              <ActionIcon
-                variant="gradient"
-                gradient={{ from: "green", to: "teal" }}
-                size="xl"
-                radius="xl"
-              >
-                <IconCalculator size={28} />
-              </ActionIcon>
-              <Title order={1} c="green.7">
-                ワリーリ
-              </Title>
-            </Group>
-
-            <Text c="dimmed" ta="center" size="lg">
+    <Box mih="100vh" bg="white">
+      <Box pos="relative">
+        <Box
+          pos="relative"
+          bg="green.8"
+          style={{
+            background: "white",
+            clipPath: "inset(0 round 0 0 30px 0)",
+          }}
+        >
+          <Box pt="md" px="md">
+            <Title order={1} c="green.0" size="h4">
+              ワリーリ
+            </Title>
+          </Box>
+          <Container pb="60px">
+            <Box px="70px">
+              <Image
+                mt="md"
+                component={NextImage}
+                src={HeroImage}
+                alt=""
+                h="auto"
+                mx="auto"
+              />
+            </Box>
+            <Text c="white" ta="center" size="xl" mt="md" fw={600}>
               みんなで使う、シンプルな割り勘アプリ
             </Text>
-          </Stack>
-        </Paper>
-
-        <Stack gap="md" w="100%" maw={400}>
-          <Button
-            component={NextLink}
-            href="/groups/new"
-            leftSection={<IconUsers size={20} />}
-            variant="gradient"
-            gradient={{ from: "green", to: "teal" }}
-            size="lg"
-            fullWidth
-          >
-            割り勘グループを作成
-          </Button>
-        </Stack>
-
-        <RecentGroups />
-
-        <Paper withBorder w="100%" maw={400}>
-          <Stack gap="sm">
-            <Group gap="xs">
-              <IconHeart size={16} color="var(--mantine-color-green-6)" />
-              <Text size="sm" fw={600} c="green.7">
-                ワリーリの特徴
+            <Stack align="center">
+              <Button
+                mt="lg"
+                variant="white"
+                component={NextLink}
+                href="/groups/new"
+                leftSection={<IconPencil size={22} />}
+                size="lg"
+                fullWidth
+              >
+                割り勘グループを作成
+              </Button>
+              <Text size="sm" c="white" ta="center" mt="lg">
+                最近閲覧したグループ
               </Text>
-            </Group>
-
-            <Text size="sm" c="dimmed">
-              • シンプルで使いやすいデザイン
-              <br />
-              • リアルタイムで金額を共有
-              <br />• 面倒な計算は自動で処理
+              <RecentGroups />
+            </Stack>
+          </Container>
+        </Box>
+        <Box
+          pos="absolute"
+          top="calc(100% - 1px)"
+          left={0}
+          w="30px"
+          h="30px"
+          bg="green.8"
+          style={{
+            mask: "radial-gradient(30px at 100% 100%, #0000 98%, #000)",
+          }}
+        />
+      </Box>
+      <Container mt="xl">
+        <Stack gap="80px">
+          <Stack gap="lg" align="center">
+            <Title c="green" order={2} size="h3">
+              シンプルな割り勘管理
+            </Title>
+            <Box px="70px">
+              <Image
+                component={NextImage}
+                src={SimpleImage}
+                alt=""
+                h="auto"
+                mx="auto"
+              />
+            </Box>
+            <Text ta="center">
+              グループを作成して、誰が何を支払ったかを記録。参加者全員で自動的に金額を均等に分け合い、複雑な計算はアプリが自動で処理します。
             </Text>
           </Stack>
-        </Paper>
-      </Stack>
-    </Container>
+          <Stack gap="lg" align="center">
+            <Title c="green" order={2} size="h3">
+              直感的なUI
+            </Title>
+            <Box px="70px">
+              <Image
+                component={NextImage}
+                src={UIImage}
+                alt=""
+                h="auto"
+                mx="auto"
+              />
+            </Box>
+            <Text ta="center">
+              使いやすいインターフェースで、誰でも簡単に操作できます。直感的なボタン配置と分かりやすい表示で、ストレスなく割り勘を管理できます。
+            </Text>
+          </Stack>
+          <Stack gap="lg" align="center">
+            <Title c="green" order={2} size="h3">
+              広告なし
+            </Title>
+            <Box px="70px">
+              <Image
+                component={NextImage}
+                src={FreeImage}
+                alt=""
+                h="auto"
+                mx="auto"
+              />
+            </Box>
+            <Text ta="center">
+              広告による邪魔な表示は一切ありません。純粋に割り勘管理に集中できる、クリーンな環境を提供します。
+            </Text>
+          </Stack>
+        </Stack>
+      </Container>
+    </Box>
   );
 }

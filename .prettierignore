@@ -1,3 +1,6 @@
+# ファイル
+*.svg
+
 # gitignoreファイルを除外
 .gitignore
 */.gitignore
@@ -23,5 +26,6 @@ node_modules/
 # Firebase関連
 .firebaserc
 firebase.json
+firestore.rules
 
 .prettierignore

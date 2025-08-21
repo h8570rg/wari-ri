@@ -2,7 +2,8 @@
 
 import { updateExpense, deleteExpense } from "./actions";
 import { editExpenseSchema } from "./schema";
-import { GroupDocument, ExpenseDocument } from "@/lib/data";
+import { GroupDocument } from "@/lib/data/group";
+import { ExpenseDocument } from "@/lib/data/expense";
 import {
   Button,
   Checkbox,
