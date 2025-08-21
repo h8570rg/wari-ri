@@ -136,7 +136,7 @@ export function EditGroupForm({ group }: Props) {
                     return;
                   }
                   const newUser = {
-                    id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    id: crypto.randomUUID(),
                     name: userNameValue,
                   };
                   form.insertListItem("users", newUser);
