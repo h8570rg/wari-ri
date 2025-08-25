@@ -1,6 +1,8 @@
 import { getGroup } from "@/lib/data/group";
 import { getExpense } from "@/lib/data/expense";
 import { EditExpenseForm } from "./_components/edit-expense-form";
+import { PageHeader } from "@/components/page-header";
+import { Box, Container } from "@mantine/core";
 
 type Props = {
   params: Promise<{ id: string; expenseId: string }>;
@@ -13,5 +15,12 @@ export default async function EditExpensePage({ params }: Props) {
     getExpense(id, expenseId),
   ]);
 
-  return <EditExpenseForm group={group} expense={expense} />;
+  return (
+    <Box>
+      <PageHeader title="支出編集" />
+      <Container>
+        <EditExpenseForm group={group} expense={expense} />
+      </Container>
+    </Box>
+  );
 }
