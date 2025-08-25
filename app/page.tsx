@@ -20,8 +20,8 @@ import FreeImage from "./free.svg";
 
 export default function RootPage() {
   return (
-    <Box mih="100vh" bg="white">
-      <Box pos="relative">
+    <Box>
+      <Box pos="relative" mb="xl">
         <Box
           pos="relative"
           bg="green.8"
@@ -31,41 +31,43 @@ export default function RootPage() {
           }}
         >
           <Box pt="md" px="md">
-            <Title order={1} c="green.0" size="h4">
+            <Text component={NextLink} href="/" c="green.1" size="sm" fw={700}>
               ワリーリ
-            </Title>
+            </Text>
           </Box>
-          <Container pb="60px">
-            <Box px="70px">
+          <Container py="lg" pl="md">
+            <Box py="xl">
               <Image
                 mt="md"
                 component={NextImage}
                 src={HeroImage}
                 alt=""
                 h="auto"
+                w="calc(100% - 140px)"
                 mx="auto"
+                maw="500px"
               />
-            </Box>
-            <Text c="white" ta="center" size="xl" mt="md" fw={600}>
-              みんなで使う、シンプルな割り勘アプリ
-            </Text>
-            <Stack align="center">
-              <Button
-                mt="lg"
-                variant="white"
-                component={NextLink}
-                href="/groups/new"
-                leftSection={<IconPencil size={22} />}
-                size="lg"
-                fullWidth
-              >
-                割り勘グループを作成
-              </Button>
-              <Text size="sm" c="white" ta="center" mt="lg">
-                最近閲覧したグループ
+              <Text c="white" ta="center" size="xl" mt="md" fw={600}>
+                みんなで使う、シンプルな割り勘アプリ
               </Text>
-              <RecentGroups />
-            </Stack>
+              <Stack align="center">
+                <Button
+                  mt="lg"
+                  variant="white"
+                  component={NextLink}
+                  href="/groups/new"
+                  leftSection={<IconPencil size={22} />}
+                  size="lg"
+                  fullWidth
+                >
+                  割り勘グループを作成
+                </Button>
+                <Text size="sm" c="white" ta="center" mt="lg">
+                  最近閲覧したグループ
+                </Text>
+                <RecentGroups />
+              </Stack>
+            </Box>
           </Container>
         </Box>
         <Box
@@ -80,7 +82,7 @@ export default function RootPage() {
           }}
         />
       </Box>
-      <Container mt="xl">
+      <Container mb="xl">
         <Stack gap="80px">
           <Stack gap="lg" align="center">
             <Title c="green" order={2} size="h3">
