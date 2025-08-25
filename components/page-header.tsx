@@ -8,7 +8,6 @@ export function PageHeader({ title }: { title: string }) {
         pos="relative"
         bg="green.8"
         style={{
-          background: "white",
           clipPath: "inset(0 round 0 0 30px 0)",
         }}
       >
