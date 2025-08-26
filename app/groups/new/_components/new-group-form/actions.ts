@@ -4,13 +4,13 @@ import { redirect } from "next/navigation";
 import { createGroup as _createGroup } from "@/lib/data/group";
 
 export async function createGroup({
-  name,
-  userNames,
+	name,
+	userNames,
 }: {
-  name: string;
-  userNames: string[];
+	name: string;
+	userNames: string[];
 }) {
-  const groupId = await _createGroup({ name, userNames });
+	const groupId = await _createGroup({ name, userNames });
 
-  redirect(`/groups/${groupId}`);
+	redirect(`/groups/${groupId}`);
 }
