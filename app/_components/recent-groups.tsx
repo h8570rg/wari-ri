@@ -8,11 +8,11 @@ import {
   type RecentGroup,
 } from "@/lib/local-storage";
 import { getGroup } from "@/lib/data/group";
-import { Button, Stack, StackProps } from "@mantine/core";
+import { Box, BoxProps, Button, Stack, Text } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import NextLink from "next/link";
 
-export function RecentGroups(props: StackProps) {
+export function RecentGroups(props: BoxProps) {
   const [recentGroups, setRecentGroups] = useState<RecentGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -76,22 +76,27 @@ export function RecentGroups(props: StackProps) {
   }
 
   return (
-    <Stack gap="xs" w="100%" {...props}>
-      {recentGroups.map((group) => (
-        <Button
-          key={group.id}
-          component={NextLink}
-          href={`/groups/${group.id}`}
-          variant="outline"
-          color="white"
-          rightSection={<IconChevronRight size={16} />}
-          justify="space-between"
-          size="sm"
-          w="100%"
-        >
-          {group.name}
-        </Button>
-      ))}
-    </Stack>
+    <Box {...props}>
+      <Text size="sm" c="white" ta="center" mb="md">
+        最近閲覧したグループ
+      </Text>
+      <Stack gap="xs" w="100%">
+        {recentGroups.map((group) => (
+          <Button
+            key={group.id}
+            component={NextLink}
+            href={`/groups/${group.id}`}
+            variant="outline"
+            color="white"
+            rightSection={<IconChevronRight size={16} />}
+            justify="space-between"
+            size="sm"
+            w="100%"
+          >
+            {group.name}
+          </Button>
+        ))}
+      </Stack>
+    </Box>
   );
 }

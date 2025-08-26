@@ -35,39 +35,31 @@ export default function RootPage() {
               ワリーリ
             </Text>
           </Box>
-          <Container py="lg" pl="md">
-            <Box py="xl">
-              <Image
-                mt="md"
-                component={NextImage}
-                src={HeroImage}
-                alt=""
-                h="auto"
-                w="calc(100% - 140px)"
-                mx="auto"
-                maw="500px"
-              />
-              <Text c="white" ta="center" size="xl" mt="md" fw={600}>
-                みんなで使う、シンプルな割り勘アプリ
-              </Text>
-              <Stack align="center">
-                <Button
-                  mt="lg"
-                  variant="white"
-                  component={NextLink}
-                  href="/groups/new"
-                  leftSection={<IconPencil size={22} />}
-                  size="lg"
-                  fullWidth
-                >
-                  割り勘グループを作成
-                </Button>
-                <Text size="sm" c="white" ta="center" mt="lg">
-                  最近閲覧したグループ
-                </Text>
-                <RecentGroups />
-              </Stack>
-            </Box>
+          <Container py="50px">
+            <Image
+              component={NextImage}
+              src={HeroImage}
+              alt=""
+              h="auto"
+              w="calc(100% - 140px)"
+              mx="auto"
+              maw="500px"
+            />
+            <Text c="white" ta="center" size="xl" mt="md" fw={600}>
+              みんなで使う、シンプルな割り勘アプリ
+            </Text>
+            <Button
+              mt="lg"
+              variant="white"
+              component={NextLink}
+              href="/groups/new"
+              leftSection={<IconPencil size={22} />}
+              size="lg"
+              fullWidth
+            >
+              割り勘グループを作成
+            </Button>
+            <RecentGroups mt="lg" w="100%" />
           </Container>
         </Box>
         <Box
