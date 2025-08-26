@@ -1,30 +1,30 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createExpense as _createExpense } from "@/lib/data/expense";
 
 export async function createExpense({
-  groupId,
-  payerId,
-  amount,
-  description,
-  participantIds,
+	groupId,
+	payerId,
+	amount,
+	description,
+	participantIds,
 }: {
-  groupId: string;
-  payerId: string;
-  amount: number;
-  description: string;
-  participantIds: string[];
+	groupId: string;
+	payerId: string;
+	amount: number;
+	description: string;
+	participantIds: string[];
 }) {
-  await _createExpense({
-    groupId,
-    payerId,
-    amount,
-    description,
-    participantIds,
-  });
+	await _createExpense({
+		groupId,
+		payerId,
+		amount,
+		description,
+		participantIds,
+	});
 
-  revalidatePath(`/groups/${groupId}`);
-  redirect(`/groups/${groupId}`);
+	revalidatePath(`/groups/${groupId}`);
+	redirect(`/groups/${groupId}`);
 }

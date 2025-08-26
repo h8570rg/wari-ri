@@ -1,49 +1,49 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import {
-  updateExpense as _updateExpense,
-  deleteExpense as _deleteExpense,
+	deleteExpense as _deleteExpense,
+	updateExpense as _updateExpense,
 } from "@/lib/data/expense";
 
 export async function updateExpense({
-  groupId,
-  expenseId,
-  payerId,
-  amount,
-  description,
-  participantIds,
+	groupId,
+	expenseId,
+	payerId,
+	amount,
+	description,
+	participantIds,
 }: {
-  groupId: string;
-  expenseId: string;
-  payerId: string;
-  amount: number;
-  description: string;
-  participantIds: string[];
+	groupId: string;
+	expenseId: string;
+	payerId: string;
+	amount: number;
+	description: string;
+	participantIds: string[];
 }) {
-  await _updateExpense({
-    groupId,
-    expenseId,
-    payerId,
-    amount,
-    description,
-    participantIds,
-  });
+	await _updateExpense({
+		groupId,
+		expenseId,
+		payerId,
+		amount,
+		description,
+		participantIds,
+	});
 
-  revalidatePath(`/groups/${groupId}`);
-  redirect(`/groups/${groupId}`);
+	revalidatePath(`/groups/${groupId}`);
+	redirect(`/groups/${groupId}`);
 }
 
 export async function deleteExpense({
-  groupId,
-  expenseId,
+	groupId,
+	expenseId,
 }: {
-  groupId: string;
-  expenseId: string;
+	groupId: string;
+	expenseId: string;
 }) {
-  await _deleteExpense(groupId, expenseId);
+	await _deleteExpense(groupId, expenseId);
 
-  revalidatePath(`/groups/${groupId}`);
-  redirect(`/groups/${groupId}`);
+	revalidatePath(`/groups/${groupId}`);
+	redirect(`/groups/${groupId}`);
 }

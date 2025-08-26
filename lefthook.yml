@@ -1,14 +1,9 @@
 pre-commit:
   parallel: false
   jobs:
-    - name: "Next.js Lint"
-      run: "npm run lint -- --fix --file {staged_files}"
-      glob: "*.{js,ts,jsx,tsx}"
+    - name: "lint"
+      run: "npm run lint -- --write {staged_files}"
       stage_fixed: true
 
-    - name: "TypeScript Type Check"
+    - name: "typecheck"
       run: "npm run typecheck"
-
-    - name: "Prettier Format"
-      run: "npm run format:target -- {staged_files}"
-      stage_fixed: true
