@@ -15,7 +15,7 @@
 		"@mantine/form": "8.2.8",
 		"@mantine/hooks": "8.2.8",
 		"@tabler/icons-react": "3.34.1",
-		"firebase": "12.1.0",
+		"firebase": "12.2.1",
 		"mantine-form-zod-resolver": "1.3.0",
 		"next": "15.5.2",
 		"react": "19.1.1",
