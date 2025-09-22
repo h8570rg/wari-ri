@@ -49,7 +49,7 @@
 **ドキュメント**: `docs: update API documentation`
 **スタイル**: `style: fix code formatting and linting issues`
 **テスト**: `test: add unit tests for user service`
-**チョア**: `chore: update dependencies and build tools`
+**雑務**: `chore: update dependencies and build tools`
 **パフォーマンス**: `perf: optimize image loading performance`
 **ビルド**: `build: update webpack configuration`
 **CI/CD**: `ci: add automated deployment pipeline`
