@@ -77,10 +77,11 @@ export const theme = createTheme({
 		TextInput: {
 			defaultProps: {
 				size: "md",
+				variant: "filled",
 			},
 			styles: {
 				input: {
-					border: "none",
+					backgroundColor: "white",
 				},
 			},
 		},

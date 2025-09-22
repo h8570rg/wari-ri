@@ -1,4 +1,4 @@
-import { ActionIcon, Container, Flex, Title } from "@mantine/core";
+import { ActionIcon, Container, Flex, Space, Title } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
 import NextLink from "next/link";
 import { NewGroupForm } from "./_components/new-group-form";
@@ -13,14 +13,7 @@ export default function NewGroupPage() {
 				<Title order={1} size="md">
 					グループ作成
 				</Title>
-				<ActionIcon
-					style={{ visibility: "hidden" }}
-					variant="light"
-					size="lg"
-					mb="lg"
-				>
-					<IconChevronLeft />
-				</ActionIcon>
+				<Space w="32" />
 			</Flex>
 			<NewGroupForm />
 		</Container>
