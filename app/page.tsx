@@ -3,6 +3,7 @@
 import {
 	Box,
 	Button,
+	Center,
 	Container,
 	Image,
 	Stack,
@@ -30,11 +31,18 @@ export default function RootPage() {
 						clipPath: "inset(0 round 0 0 30px 0)",
 					}}
 				>
-					<Box pt="md" px="md">
-						<Text component={NextLink} href="/" c="green.1" size="sm" fw={700}>
+					<Center pt="md" px="md">
+						<Text
+							component={NextLink}
+							href="/"
+							c="white"
+							size="xl"
+							fw={400}
+							style={{ fontFamily: "var(--font-mochiy-pop-one)" }}
+						>
 							ワリーリ
 						</Text>
-					</Box>
+					</Center>
 					<Container py="50px">
 						<Image
 							component={NextImage}

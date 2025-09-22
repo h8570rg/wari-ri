@@ -6,6 +6,7 @@ import {
 	mantineHtmlProps,
 } from "@mantine/core";
 import type { Metadata } from "next";
+import { mochiyPopOne } from "@/lib/fonts";
 import { theme } from "@/lib/theme";
 import "./global.css";
 
@@ -20,7 +21,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="ja" {...mantineHtmlProps}>
+		<html lang="ja" {...mantineHtmlProps} className={mochiyPopOne.variable}>
 			<head>
 				<ColorSchemeScript />
 			</head>
