@@ -1,11 +1,13 @@
-import { createTheme } from "@mantine/core";
+import { createTheme, DEFAULT_THEME } from "@mantine/core";
 
 export const theme = createTheme({
 	// プライマリカラー（緑系を割り勘アプリのメインカラーとして設定）
-	primaryColor: "green",
+	primaryColor: "primary",
 
 	// カラーパレット
-	colors: {},
+	colors: {
+		primary: DEFAULT_THEME.colors.dark,
+	},
 
 	// デフォルトの半径を設定
 	defaultRadius: "md",
@@ -50,15 +52,36 @@ export const theme = createTheme({
 				variant: "filled",
 				radius: "md",
 			},
+			styles: {
+				root: {
+					fontWeight: "500",
+				},
+			},
 		},
 
-		Title: {},
+		Title: {
+			styles: {
+				root: {
+					fontWeight: "500",
+				},
+			},
+		},
 
 		Paper: {
 			defaultProps: {
 				shadow: "sm",
 				radius: "md",
 				p: "lg",
+			},
+		},
+		TextInput: {
+			defaultProps: {
+				size: "md",
+			},
+			styles: {
+				input: {
+					border: "none",
+				},
 			},
 		},
 	},

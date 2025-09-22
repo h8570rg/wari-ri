@@ -1,14 +1,28 @@
-import { Box, Container } from "@mantine/core";
-import { PageHeader } from "@/components/page-header";
+import { ActionIcon, Container, Flex, Title } from "@mantine/core";
+import { IconChevronLeft } from "@tabler/icons-react";
+import NextLink from "next/link";
 import { NewGroupForm } from "./_components/new-group-form";
 
 export default function NewGroupPage() {
 	return (
-		<Box>
-			<PageHeader title="グループ作成" />
-			<Container>
-				<NewGroupForm />
-			</Container>
-		</Box>
+		<Container>
+			<Flex justify="space-between" align="center" mb="lg">
+				<ActionIcon component={NextLink} href="/" variant="subtle" size="lg">
+					<IconChevronLeft />
+				</ActionIcon>
+				<Title order={1} size="md">
+					グループ作成
+				</Title>
+				<ActionIcon
+					style={{ visibility: "hidden" }}
+					variant="light"
+					size="lg"
+					mb="lg"
+				>
+					<IconChevronLeft />
+				</ActionIcon>
+			</Flex>
+			<NewGroupForm />
+		</Container>
 	);
 }
