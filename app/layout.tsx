@@ -7,8 +7,8 @@ import {
 } from "@mantine/core";
 import type { Metadata } from "next";
 import { mochiyPopOne } from "@/lib/fonts";
-import { theme } from "@/lib/theme";
 import "./global.css";
+import { theme } from "@/lib/theme";
 
 export const metadata: Metadata = {
 	title: "ワリーリ",
@@ -27,7 +27,14 @@ export default function RootLayout({
 			</head>
 			<body>
 				<MantineProvider theme={theme}>
-					<Box>{children}</Box>
+					<Box
+						style={{
+							background: "linear-gradient(to bottom, #f6f6f6, #e7e7e7)",
+						}}
+						mih="100dvh"
+					>
+						{children}
+					</Box>
 				</MantineProvider>
 			</body>
 		</html>

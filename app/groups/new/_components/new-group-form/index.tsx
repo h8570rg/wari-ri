@@ -55,6 +55,7 @@ export function NewGroupForm() {
 					<Group gap="xs">
 						{children}
 						<Button
+							size="md"
 							onClick={() => {
 								const userNameValue = userNameForm.getValues().userName;
 								const userNamesValue = form.getValues().userNames;
@@ -98,7 +99,7 @@ export function NewGroupForm() {
 				type="submit"
 				mt="lg"
 				w="100%"
-				size="md"
+				size="lg"
 				loading={form.submitting}
 			>
 				グループを作成
