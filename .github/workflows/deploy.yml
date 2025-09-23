@@ -36,12 +36,11 @@ jobs:
       - name: Setup Firebase CLI
         run: npm install -g firebase-tools
 
-      # Note: Warning about FIREBASE_SERVICE_ACCOUNT is expected until the secret is configured in repository settings
       - name: Authenticate to Firebase
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > $GITHUB_WORKSPACE/firebase-service-account.json
+          echo "$FIREBASE_SERVICE_ACCOUNT_KEY" | base64 -d > $GITHUB_WORKSPACE/firebase-service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/firebase-service-account.json
           firebase use $FIREBASE_PROJECT_ID
 

@@ -16,7 +16,14 @@ mainブランチにマージされた際にFirebase FunctionsとFirestore Rules�
 GitHubリポジトリの「Settings」→「Secrets and variables」→「Actions」で以下のSecretsを設定してください：
 
 - **FIREBASE_PROJECT_ID**: FirebaseプロジェクトのID
-- **FIREBASE_SERVICE_ACCOUNT**: サービスアカウントキーのJSONファイルの内容をそのまま貼り付け
+- **FIREBASE_SERVICE_ACCOUNT_KEY**: サービスアカウントキーのJSONファイルの内容をbase64エンコードした値
+
+#### base64エンコードの方法
+
+macOS/Linuxの場合：
+```bash
+base64 -i path/to/service-account.json
+```
 
 ### 3. デプロイワークフローの動作
 
