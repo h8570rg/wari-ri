@@ -27,13 +27,16 @@ export default function RootLayout({
 			</head>
 			<body>
 				<MantineProvider theme={theme}>
-					<Box
-						style={{
-							background: "linear-gradient(to bottom, #f6f6f6, #e7e7e7)",
-						}}
-						mih="100dvh"
-					>
-						{children}
+					<Box pos="relative" mih="100dvh">
+						<Box
+							pos="absolute"
+							inset={0}
+							style={{
+								background:
+									"linear-gradient(176deg, rgba(233, 233, 233, 1), rgba(172, 172, 172, 1))",
+							}}
+						/>
+						<Box pos="relative">{children}</Box>
 					</Box>
 				</MantineProvider>
 			</body>
