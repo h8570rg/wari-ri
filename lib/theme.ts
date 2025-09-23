@@ -12,19 +12,6 @@ export const theme = createTheme({
 	// デフォルトの半径を設定
 	defaultRadius: "md",
 
-	// フォント設定
-	fontFamily:
-		'Hiragino Sans, "Hiragino Kaku Gothic ProN", "Noto Sans CJK JP", Meiryo, sans-serif',
-	headings: {
-		fontFamily:
-			'Hiragino Sans, "Hiragino Kaku Gothic ProN", "Noto Sans CJK JP", Meiryo, sans-serif',
-		sizes: {
-			h1: { fontSize: "2.5rem", lineHeight: "1.2" },
-			h2: { fontSize: "2rem", lineHeight: "1.3" },
-			h3: { fontSize: "1.5rem", lineHeight: "1.4" },
-		},
-	},
-
 	// スペーシング
 	spacing: {
 		xs: "0.5rem",
@@ -46,27 +33,12 @@ export const theme = createTheme({
 				},
 			},
 		},
-
 		Button: {
 			defaultProps: {
 				variant: "filled",
 				radius: "md",
 			},
-			styles: {
-				root: {
-					fontWeight: "500",
-				},
-			},
 		},
-
-		Title: {
-			styles: {
-				root: {
-					fontWeight: "500",
-				},
-			},
-		},
-
 		Paper: {
 			defaultProps: {
 				shadow: "sm",
