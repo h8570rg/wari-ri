@@ -1,142 +1,64 @@
 "use client";
 
-import {
-	Box,
-	Button,
-	Center,
-	Container,
-	Image,
-	Stack,
-	Text,
-	Title,
-} from "@mantine/core";
-import { IconPencil } from "@tabler/icons-react";
+import { Box, Button, Center, Image, Text } from "@mantine/core";
 import NextImage from "next/image";
 import NextLink from "next/link";
-import { RecentGroups } from "./_components/recent-groups";
-import FreeImage from "./free.svg";
-import HeroImage from "./image.svg";
-import SimpleImage from "./simple.svg";
-import UIImage from "./ui.svg";
+import catImage from "./_assets/cat.png";
 
 export default function RootPage() {
 	return (
-		<Box>
-			<Box pos="relative" mb="xl">
-				<Box
-					pos="relative"
-					bg="green.8"
+		<Box pos="relative" mih="100dvh" style={{ overflow: "hidden" }}>
+			<Box pos="absolute" inset={0} bg="primary.8" />
+			<Image
+				component={NextImage}
+				src={catImage}
+				alt="My image"
+				pos="absolute"
+				top="30px"
+				left="40px"
+				w="178%"
+				h="auto"
+				style={{
+					mask: "radial-gradient(ellipse at center, black 40%, transparent 70%)",
+					WebkitMask:
+						"radial-gradient(ellipse at center, black 40%, transparent 70%)",
+					filter: "drop-shadow(0 4px 20px rgba(0, 0, 0, 0.1))",
+				}}
+				opacity={0.7}
+			/>
+			<Text fw={700} size="lg" pos="absolute" top="20px" left="20px" c="white">
+				ワリーリ
+			</Text>
+			<Text
+				size="60px"
+				fw={700}
+				pos="absolute"
+				top="240px"
+				left="20px"
+				lh="1.3"
+				c="white"
+				style={{
+					textShadow:
+						"2px 2px 8px var(--mantine-color-primary-8), -1px -1px 4px var(--mantine-color-primary-8), 1px -1px 4px var(--mantine-color-primary-8), -1px 1px 4px var(--mantine-color-primary-8)",
+				}}
+			>
+				割り勘<br></br>しようよ
+			</Text>
+			<Center pos="absolute" bottom={0} left={0} right={0} px="30" pb="40">
+				<Button
+					component={NextLink}
+					href="/groups/new"
+					size="xl"
+					variant="white"
+					w="100%"
+					fw={700}
 					style={{
-						background: "white",
-						clipPath: "inset(0 round 0 0 30px 0)",
+						boxShadow: "0 4px 20px rgba(255, 255, 255, 0.2)",
 					}}
 				>
-					<Center pt="md" px="md">
-						<Text
-							component={NextLink}
-							href="/"
-							c="white"
-							size="xl"
-							fw={400}
-							style={{ fontFamily: "var(--font-mochiy-pop-one)" }}
-						>
-							ワリーリ
-						</Text>
-					</Center>
-					<Container py="50px">
-						<Image
-							component={NextImage}
-							src={HeroImage}
-							alt=""
-							h="auto"
-							w="calc(100% - 140px)"
-							mx="auto"
-							maw="500px"
-						/>
-						<Text c="white" ta="center" size="xl" mt="md" fw={600}>
-							みんなで使う、シンプルな割り勘アプリ
-						</Text>
-						<Button
-							mt="lg"
-							variant="white"
-							component={NextLink}
-							href="/groups/new"
-							leftSection={<IconPencil size={22} />}
-							size="lg"
-							fullWidth
-						>
-							割り勘グループを作成
-						</Button>
-						<RecentGroups mt="lg" w="100%" />
-					</Container>
-				</Box>
-				<Box
-					pos="absolute"
-					top="calc(100% - 1px)"
-					left={0}
-					w="30px"
-					h="30px"
-					bg="green.8"
-					style={{
-						mask: "radial-gradient(30px at 100% 100%, #0000 98%, #000)",
-					}}
-				/>
-			</Box>
-			<Container mb="xl">
-				<Stack gap="80px">
-					<Stack gap="lg" align="center">
-						<Title c="green" order={2} size="h3">
-							シンプルな割り勘管理
-						</Title>
-						<Box px="70px">
-							<Image
-								component={NextImage}
-								src={SimpleImage}
-								alt=""
-								h="auto"
-								mx="auto"
-							/>
-						</Box>
-						<Text ta="center">
-							グループを作成して、誰が何を支払ったかを記録。参加者全員で自動的に金額を均等に分け合い、複雑な計算はアプリが自動で処理します。
-						</Text>
-					</Stack>
-					<Stack gap="lg" align="center">
-						<Title c="green" order={2} size="h3">
-							直感的なUI
-						</Title>
-						<Box px="70px">
-							<Image
-								component={NextImage}
-								src={UIImage}
-								alt=""
-								h="auto"
-								mx="auto"
-							/>
-						</Box>
-						<Text ta="center">
-							使いやすいインターフェースで、誰でも簡単に操作できます。直感的なボタン配置と分かりやすい表示で、ストレスなく割り勘を管理できます。
-						</Text>
-					</Stack>
-					<Stack gap="lg" align="center">
-						<Title c="green" order={2} size="h3">
-							広告なし
-						</Title>
-						<Box px="70px">
-							<Image
-								component={NextImage}
-								src={FreeImage}
-								alt=""
-								h="auto"
-								mx="auto"
-							/>
-						</Box>
-						<Text ta="center">
-							広告による邪魔な表示は一切ありません。純粋に割り勘管理に集中できる、クリーンな環境を提供します。
-						</Text>
-					</Stack>
-				</Stack>
-			</Container>
+					グループを作成
+				</Button>
+			</Center>
 		</Box>
 	);
 }
