@@ -25,7 +25,7 @@ type Props = {
 export function NewExpenseForm({ group }: Props) {
 	const form = useForm({
 		initialValues: {
-			amount: "",
+			amount: undefined as number | undefined,
 			description: "",
 			payerId: "",
 			participantIds: [] as string[],
@@ -37,7 +37,7 @@ export function NewExpenseForm({ group }: Props) {
 		await createExpense({
 			groupId: group.id,
 			payerId: values.payerId,
-			amount: Number(values.amount),
+			amount: values.amount ?? 0,
 			description: values.description,
 			participantIds: values.participantIds,
 		});
@@ -54,14 +54,12 @@ export function NewExpenseForm({ group }: Props) {
 							label: user.name,
 						}))}
 						{...form.getInputProps("payerId")}
-						flex="1"
 					/>
 				</Field>
 				<Field supportingText="の">
 					<Checkbox.Group
 						error={form.errors.participantIds}
 						{...form.getInputProps("participantIds")}
-						flex="1"
 					>
 						<Group>
 							{group.users.map((user) => (
