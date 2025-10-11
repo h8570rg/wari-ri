@@ -34,7 +34,6 @@ export async function ActivityHistory({ groupId }: Props) {
 				{activities.map((activity) => (
 					<Fragment key={activity.id}>
 						<ActivityHistoryItem
-							key={activity.id}
 							activity={activity}
 							group={group}
 						/>
