@@ -3,7 +3,6 @@ import {
 	deleteDoc,
 	doc,
 	getDoc,
-	onSnapshot,
 	type QueryDocumentSnapshot,
 	type SnapshotOptions,
 	serverTimestamp,
@@ -16,28 +15,34 @@ import type { BaseDocument } from ".";
 
 export const groupCollectionName = "groups";
 
+export type UserBalance = {
+	paid: number;
+	owes: number;
+	balance: number;
+};
+
+export type Settlement = {
+	fromUserId: string;
+	toUserId: string;
+	amount: number;
+};
+
+export type Aggregation = {
+	totalExpenses?: number;
+	userBalances?: {
+		[userId: string]: UserBalance;
+	};
+	remainingSettlements?: Settlement[];
+	lastCalculatedAt?: Date;
+};
+
 export type GroupDocument = BaseDocument & {
 	name: string;
 	users: { id: string; name: string }[];
-	aggregation?: {
-		totalExpenses?: number;
-		userBalances?: {
-			[userId: string]: {
-				paid: number;
-				owes: number;
-				balance: number;
-			};
-		};
-		remainingSettlements?: {
-			fromUserId: string;
-			toUserId: string;
-			amount: number;
-		}[];
-		lastCalculatedAt?: Date;
-	};
+	aggregation?: Aggregation;
 };
 
-const groupConverter = {
+export const groupConverter = {
 	toFirestore(value: WithFieldValue<GroupDocument>) {
 		return value;
 	},
@@ -78,31 +83,13 @@ export async function createGroup({
 }
 
 export async function getGroup(groupId: string) {
-	const docRef = doc(db, groupCollectionName, groupId).withConverter(
-		groupConverter,
-	);
+	const docRef = getGroupDocRef(groupId);
 	const docSnap = await getDoc(docRef);
 	const data = docSnap.data();
 	if (!data) {
 		throw new Error("Group not found");
 	}
 	return data;
-}
-
-export function subscribeToGroup(
-	groupId: string,
-	callback: (group: GroupDocument) => void,
-) {
-	const docRef = doc(db, groupCollectionName, groupId).withConverter(
-		groupConverter,
-	);
-	const unsubscribe = onSnapshot(docRef, (doc) => {
-		if (!doc.exists()) {
-			throw new Error("Group not found");
-		}
-		callback(doc.data());
-	});
-	return unsubscribe;
 }
 
 export async function updateGroup({
@@ -114,38 +101,16 @@ export async function updateGroup({
 	name: string;
 	users: { id: string; name: string }[];
 }) {
-	await updateDoc(
-		doc(db, groupCollectionName, groupId).withConverter(groupConverter),
-		{
-			name,
-			users,
-		},
-	);
+	await updateDoc(getGroupDocRef(groupId), {
+		name,
+		users,
+	});
 }
 
 export async function deleteGroup(groupId: string) {
-	await deleteDoc(
-		doc(db, groupCollectionName, groupId).withConverter(groupConverter),
-	);
+	await deleteDoc(getGroupDocRef(groupId));
 }
 
-// 精算記録を作成する関数
-export async function createSettlement({
-	groupId,
-	fromUserId,
-	toUserId,
-	amount,
-}: {
-	groupId: string;
-	fromUserId: string;
-	toUserId: string;
-	amount: number;
-}) {
-	const { createActivity } = await import("./activity");
-	return createActivity(groupId, {
-		type: "settlement",
-		fromUserId,
-		toUserId,
-		amount,
-	});
+export function getGroupDocRef(groupId: string) {
+	return doc(db, groupCollectionName, groupId).withConverter(groupConverter);
 }

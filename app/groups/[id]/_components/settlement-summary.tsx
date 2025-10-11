@@ -12,12 +12,11 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 import type { GroupDocument } from "@/lib/data/group";
-import { useRealtimeGroup } from "@/lib/hooks/use-realtime-group";
 import { createSettlement } from "./settlement-summary/actions";
 
 type Props = {
 	groupId: string;
-	initialGroup: GroupDocument;
+	group: GroupDocument;
 };
 
 type Settlement = {
@@ -28,9 +27,7 @@ type Settlement = {
 	amount: number;
 };
 
-export function SettlementSummary({ groupId, initialGroup }: Props) {
-	const { group } = useRealtimeGroup(groupId, initialGroup);
-
+export function SettlementSummary({ groupId, group }: Props) {
 	const aggregation = group.aggregation;
 
 	// 集計データが存在しない場合は、データがないことを示す

@@ -1,6 +1,7 @@
 "use server";
 
-import { createSettlement as _createSettlement } from "@/lib/data/group";
+import { revalidatePath } from "next/cache";
+import { createSettlement as _createSettlement } from "@/lib/data/settlement";
 
 export async function createSettlement({
 	groupId,
@@ -20,5 +21,5 @@ export async function createSettlement({
 		amount,
 	});
 
-	// リアルタイムリスナーが自動的に更新を検知するため、revalidatePathは不要
+	revalidatePath(`/groups/${groupId}`);
 }

@@ -38,14 +38,34 @@ const activityConverter = {
 	},
 };
 
+export function getActivityDocRef(groupId: string, activityId: string) {
+	return doc(
+		db,
+		groupCollectionName,
+		groupId,
+		activitySubcollectionName,
+		activityId,
+	).withConverter(activityConverter);
+}
+
+export function getNewActivityDocRef(groupId: string) {
+	return doc(
+		collection(db, groupCollectionName, groupId, activitySubcollectionName),
+	);
+}
+
+export function getActivitiesCollectionRef(groupId: string) {
+	return collection(
+		db,
+		groupCollectionName,
+		groupId,
+		activitySubcollectionName,
+	).withConverter(activityConverter);
+}
+
 export async function getActivities(groupId: string) {
 	const q = query(
-		collection(
-			db,
-			groupCollectionName,
-			groupId,
-			activitySubcollectionName,
-		).withConverter(activityConverter),
+		getActivitiesCollectionRef(groupId),
 		orderBy("createdAt", "desc"),
 	);
 	const querySnapshot = await getDocs(q);
@@ -56,9 +76,7 @@ export async function createActivity(
 	groupId: string,
 	activity: Omit<ActivityDocument, keyof BaseDocument>,
 ) {
-	const newDocRef = doc(
-		collection(db, groupCollectionName, groupId, activitySubcollectionName),
-	);
+	const newDocRef = getNewActivityDocRef(groupId);
 	await setDoc(newDocRef, {
 		id: newDocRef.id,
 		createdAt: serverTimestamp(),
@@ -69,13 +87,7 @@ export async function createActivity(
 }
 
 export async function getActivity(groupId: string, activityId: string) {
-	const docRef = doc(
-		db,
-		groupCollectionName,
-		groupId,
-		activitySubcollectionName,
-		activityId,
-	).withConverter(activityConverter);
+	const docRef = getActivityDocRef(groupId, activityId);
 	const docSnap = await getDoc(docRef);
 	const data = docSnap.data();
 	if (!data) {
@@ -89,26 +101,9 @@ export async function updateActivity(
 	activityId: string,
 	activity: Partial<Omit<ActivityDocument, keyof BaseDocument>>,
 ) {
-	await updateDoc(
-		doc(
-			db,
-			groupCollectionName,
-			groupId,
-			activitySubcollectionName,
-			activityId,
-		).withConverter(activityConverter),
-		activity,
-	);
+	await updateDoc(getActivityDocRef(groupId, activityId), activity);
 }
 
 export async function deleteActivity(groupId: string, activityId: string) {
-	await deleteDoc(
-		doc(
-			db,
-			groupCollectionName,
-			groupId,
-			activitySubcollectionName,
-			activityId,
-		).withConverter(activityConverter),
-	);
+	await deleteDoc(getActivityDocRef(groupId, activityId));
 }
