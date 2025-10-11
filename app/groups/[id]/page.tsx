@@ -23,7 +23,7 @@ export default async function GroupPage({ params }: Props) {
 
 	return (
 		<Container>
-			<PageHeader title="グループ詳細" backLinkHref="/" />
+			<PageHeader title="グループ詳細" backLinkHref="/" showNavbar={false} />
 			<RecentGroupTracker groupId={id} groupName={group.name} />
 			<GroupInfo group={group} />
 			<Button
@@ -43,7 +43,7 @@ export default async function GroupPage({ params }: Props) {
 					</>
 				) : (
 					<Alert
-						title="建て替えを追加ボタンから建て替え記録を追加しましょう"
+						title="「建て替えを追加」ボタンから、建て替え記録を追加しましょう"
 						icon={<IconInfoCircle size="1rem" />}
 					/>
 				)}

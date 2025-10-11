@@ -94,13 +94,7 @@ export function NewGroupForm() {
 					</Pill>
 				))}
 			</Pill.Group>
-			<Button
-				type="submit"
-				mt="lg"
-				w="100%"
-				size="xl"
-				loading={form.submitting}
-			>
+			<Button type="submit" mt="lg" w="100%" loading={form.submitting}>
 				グループを作成
 			</Button>
 		</form>
