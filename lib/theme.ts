@@ -16,15 +16,6 @@ export const theme = createTheme({
 	// デフォルトの半径を設定
 	defaultRadius: "md",
 
-	// スペーシング
-	spacing: {
-		xs: "0.5rem",
-		sm: "0.75rem",
-		md: "1rem",
-		lg: "1.5rem",
-		xl: "2rem",
-	},
-
 	// コンポーネントのデフォルトプロパティ
 	components: {
 		ActionIcon: {
@@ -59,17 +50,22 @@ export const theme = createTheme({
 		TextInput: {
 			defaultProps: {
 				size: "lg",
-				variant: "filled",
 			},
 		},
-	},
-
-	// シャドウ
-	shadows: {
-		xs: "0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)",
-		sm: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-		md: "0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12)",
-		lg: "0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10)",
-		xl: "0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05)",
+		Select: {
+			defaultProps: {
+				size: "lg",
+			},
+		},
+		NumberInput: {
+			defaultProps: {
+				size: "lg",
+			},
+		},
+		Checkbox: {
+			defaultProps: {
+				size: "md",
+			},
+		},
 	},
 });

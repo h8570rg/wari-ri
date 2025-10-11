@@ -2,7 +2,7 @@
 
 import {
 	Alert,
-	Badge,
+	Box,
 	Button,
 	Card,
 	Group,
@@ -10,7 +10,7 @@ import {
 	Text,
 	Title,
 } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 import type { GroupDocument } from "@/lib/data/group";
 import { useRealtimeGroup } from "@/lib/hooks/use-realtime-group";
 import { createSettlement } from "./settlement-summary/actions";
@@ -26,21 +26,6 @@ type Settlement = {
 	to: string;
 	toUserId: string;
 	amount: number;
-};
-
-type UserBalance = {
-	userId: string;
-	userName: string;
-	paid: number;
-	owes: number;
-	balance: number;
-};
-
-// ヘルパー関数
-const getBalanceColor = (balance: number) => {
-	if (balance > 0) return "green";
-	if (balance < 0) return "red";
-	return "gray";
 };
 
 export function SettlementSummary({ groupId, initialGroup }: Props) {
@@ -74,17 +59,6 @@ export function SettlementSummary({ groupId, initialGroup }: Props) {
 		return null;
 	}
 
-	// 集計データからユーザーバランスを構築
-	const userBalances: UserBalance[] = group.users.map(
-		(user: { id: string; name: string }) => ({
-			userId: user.id,
-			userName: user.name,
-			paid: aggregation.userBalances?.[user.id]?.paid || 0,
-			owes: aggregation.userBalances?.[user.id]?.owes || 0,
-			balance: aggregation.userBalances?.[user.id]?.balance || 0,
-		}),
-	);
-
 	// aggregationから残りの精算必要額を取得
 	const remainingSettlements = aggregation.remainingSettlements || [];
 
@@ -111,51 +85,11 @@ export function SettlementSummary({ groupId, initialGroup }: Props) {
 	const hasUncompletedSettlements = settlements.length > 0;
 
 	return (
-		<Card shadow="sm" padding="lg" radius="md" withBorder>
+		<Box component="section">
+			<Title order={2} size="sm" mb="md">
+				精算方法
+			</Title>
 			<Stack gap="md">
-				<Group justify="space-between">
-					<Title order={2} size="h3">
-						精算サマリー
-					</Title>
-					<Badge color="gray" size="sm">
-						最終更新:{" "}
-						{aggregation.lastCalculatedAt?.toLocaleDateString("ja-JP") ||
-							"不明"}
-					</Badge>
-				</Group>
-
-				{/* 総支出額の表示 */}
-				<Group justify="space-between">
-					<Text fw={500}>総支出額</Text>
-					<Text fw={700} c="blue" size="lg">
-						¥{aggregation.totalExpenses?.toLocaleString() || "不明"}
-					</Text>
-				</Group>
-
-				{/* ユーザー別収支 */}
-				<Stack gap="xs">
-					<Text fw={500} size="sm">
-						メンバー別収支
-					</Text>
-					{userBalances.map((user: UserBalance) => (
-						<Group key={user.userId} justify="space-between">
-							<Text size="sm">{user.userName}</Text>
-							<Group gap="xs">
-								<Text size="xs" c="dimmed">
-									支払い: ¥{user.paid.toLocaleString()}
-								</Text>
-								<Text size="xs" c="dimmed">
-									負担: ¥{Math.round(user.owes).toLocaleString()}
-								</Text>
-								<Badge color={getBalanceColor(user.balance)} size="sm">
-									{user.balance > 0 ? "+" : ""}¥
-									{Math.round(user.balance).toLocaleString()}
-								</Badge>
-							</Group>
-						</Group>
-					))}
-				</Stack>
-
 				{/* 精算が必要な場合 */}
 				{hasUncompletedSettlements && (
 					<Stack gap="xs">
@@ -192,11 +126,11 @@ export function SettlementSummary({ groupId, initialGroup }: Props) {
 
 				{/* 精算完了の場合 */}
 				{!hasUncompletedSettlements && (
-					<Alert color="green" title="精算完了">
-						<Text size="sm">すべての精算が完了しています！</Text>
+					<Alert color="green" icon={<IconCheck size="1rem" />}>
+						すべての精算が完了しています
 					</Alert>
 				)}
 			</Stack>
-		</Card>
+		</Box>
 	);
 }

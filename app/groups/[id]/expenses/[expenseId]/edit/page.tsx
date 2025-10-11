@@ -1,4 +1,5 @@
 import { Box, Container } from "@mantine/core";
+import type { Route } from "next";
 import { PageHeader } from "@/components/page-header";
 import { getExpense } from "@/lib/data/expense";
 import { getGroup } from "@/lib/data/group";
@@ -17,7 +18,7 @@ export default async function EditExpensePage({ params }: Props) {
 
 	return (
 		<Box>
-			<PageHeader title="支出編集" />
+			<PageHeader title="支出編集" backLinkHref={`/groups/${id}` as Route} />
 			<Container>
 				<EditExpenseForm group={group} expense={expense} />
 			</Container>

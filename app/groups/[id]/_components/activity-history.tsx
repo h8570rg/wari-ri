@@ -2,6 +2,7 @@ import {
 	ActionIcon,
 	Avatar,
 	Badge,
+	Box,
 	Card,
 	Group,
 	Stack,
@@ -42,28 +43,12 @@ export async function ActivityHistory({ groupId }: Props) {
 		}).format(date);
 	};
 
-	if (activities.length === 0) {
-		return (
-			<Card shadow="sm" padding="lg" radius="md" withBorder>
-				<Stack gap="md">
-					<Title order={2} size="h3">
-						履歴
-					</Title>
-					<Text c="dimmed" ta="center" py="xl">
-						まだ履歴がありません
-					</Text>
-				</Stack>
-			</Card>
-		);
-	}
-
 	return (
-		<Card shadow="sm" padding="lg" radius="md" withBorder>
+		<Box component="section">
+			<Title order={2} size="sm" mb="md">
+				履歴
+			</Title>
 			<Stack gap="md">
-				<Title order={2} size="h3">
-					履歴
-				</Title>
-
 				<Stack gap="sm">
 					{activities.map((activity) => (
 						<Card key={activity.id} padding="md" radius="sm" withBorder>
@@ -172,6 +157,6 @@ export async function ActivityHistory({ groupId }: Props) {
 					))}
 				</Stack>
 			</Stack>
-		</Card>
+		</Box>
 	);
 }

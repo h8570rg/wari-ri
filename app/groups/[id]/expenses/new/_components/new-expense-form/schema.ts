@@ -8,7 +8,7 @@ export const newExpenseSchema = z.object({
 		.string()
 		.min(1, { message: "内容を入力してください" })
 		.max(100, { message: "内容は100文字以内で入力してください" }),
-	payerId: z.string().min(1, { message: "建て替えした人を選択してください" }),
+	payerId: z.string().min(1, { message: "払った人を選択してください" }),
 	participantIds: z
 		.array(z.string())
 		.min(1, { message: "参加者を1人以上選択してください" }),

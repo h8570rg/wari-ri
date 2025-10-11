@@ -1,40 +1,29 @@
-import { Box, Center, Text, Title } from "@mantine/core";
+import { ActionIcon, Group, Space, Title } from "@mantine/core";
+import { IconChevronLeft } from "@tabler/icons-react";
 import NextLink from "next/link";
+import type { ComponentProps } from "react";
 
-export function PageHeader({ title }: { title: string }) {
+export function PageHeader({
+	title,
+	backLinkHref,
+}: {
+	title: string;
+	backLinkHref: ComponentProps<typeof NextLink>["href"];
+}) {
 	return (
-		<Box pos="relative" mb="xl">
-			<Box
-				pos="relative"
-				bg="green.8"
-				style={{
-					clipPath: "inset(0 round 0 0 30px 0)",
-				}}
+		<Group justify="space-between" mb="lg">
+			<ActionIcon
+				component={NextLink}
+				href={backLinkHref}
+				size="lg"
+				color="secondary"
 			>
-				<Box pt="md" px="xl">
-					<Center>
-						<Text component={NextLink} href="/" c="white" size="xl" fw={400}>
-							ワリーリ
-						</Text>
-					</Center>
-					<Box pt="md" pb="lg">
-						<Title order={1} size="h3" c="white">
-							{title}
-						</Title>
-					</Box>
-				</Box>
-			</Box>
-			<Box
-				pos="absolute"
-				top="calc(100% - 1px)"
-				left={0}
-				w="30px"
-				h="30px"
-				bg="green.8"
-				style={{
-					mask: "radial-gradient(30px at 100% 100%, #0000 98%, #000)",
-				}}
-			/>
-		</Box>
+				<IconChevronLeft />
+			</ActionIcon>
+			<Title order={1} size="lg">
+				{title}
+			</Title>
+			<Space w="32" />
+		</Group>
 	);
 }
