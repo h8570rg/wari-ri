@@ -39,7 +39,7 @@ export default async function GroupPage({ params }: Props) {
 				{activities.length > 0 ? (
 					<>
 						<ActivityHistory groupId={id} />
-						<SettlementSummary groupId={id} initialGroup={group} />
+						<SettlementSummary groupId={id} group={group} />
 					</>
 				) : (
 					<Alert
