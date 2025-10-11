@@ -1,4 +1,5 @@
-import { Box, Container } from "@mantine/core";
+import { Container } from "@mantine/core";
+import type { Route } from "next";
 import { PageHeader } from "@/components/page-header";
 import { getGroup } from "@/lib/data/group";
 import { NewExpenseForm } from "./_components/new-expense-form";
@@ -12,11 +13,12 @@ export default async function NewExpensePage({ params }: Props) {
 	const group = await getGroup(id);
 
 	return (
-		<Box>
-			<PageHeader title="支出追加" />
-			<Container>
-				<NewExpenseForm group={group} />
-			</Container>
-		</Box>
+		<Container>
+			<PageHeader
+				title="建て替え記録追加"
+				backLinkHref={`/groups/${id}` as Route}
+			/>
+			<NewExpenseForm group={group} />
+		</Container>
 	);
 }
