@@ -1,22 +1,20 @@
 "use client";
 
 import {
-	Box,
 	Button,
 	Checkbox,
-	Flex,
 	Group,
 	NumberInput,
 	Select,
 	Stack,
-	Text,
 	TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
+import { ExpenseFormField } from "@/app/groups/[id]/expenses/_components/expense-form-field";
+import { expenseSchema } from "@/app/groups/[id]/expenses/_components/expense-schema";
 import type { GroupDocument } from "@/lib/data/group";
 import { createExpense } from "./actions";
-import { newExpenseSchema } from "./schema";
 
 type Props = {
 	group: GroupDocument;
@@ -30,7 +28,7 @@ export function NewExpenseForm({ group }: Props) {
 			payerId: "",
 			participantIds: [] as string[],
 		},
-		validate: zod4Resolver(newExpenseSchema),
+		validate: zod4Resolver(expenseSchema),
 	});
 
 	const handleSubmit = async (values: typeof form.values) => {
@@ -47,7 +45,7 @@ export function NewExpenseForm({ group }: Props) {
 	return (
 		<form onSubmit={form.onSubmit(handleSubmit)}>
 			<Stack gap="lg">
-				<Field supportingText="が">
+				<ExpenseFormField supportingText="が">
 					<Select
 						placeholder="払った人"
 						data={group.users.map((user) => ({
@@ -56,8 +54,8 @@ export function NewExpenseForm({ group }: Props) {
 						}))}
 						{...form.getInputProps("payerId")}
 					/>
-				</Field>
-				<Field supportingText="の">
+				</ExpenseFormField>
+				<ExpenseFormField supportingText="の">
 					<Checkbox.Group
 						error={form.errors.participantIds}
 						{...form.getInputProps("participantIds")}
@@ -68,46 +66,25 @@ export function NewExpenseForm({ group }: Props) {
 							))}
 						</Group>
 					</Checkbox.Group>
-				</Field>
-				<Field supportingText="を払って">
+				</ExpenseFormField>
+				<ExpenseFormField supportingText="を払って">
 					<TextInput
 						placeholder="ランチ代"
 						{...form.getInputProps("description")}
 					/>
-				</Field>
-				<Field supportingText="かかった">
+				</ExpenseFormField>
+				<ExpenseFormField supportingText="かかった">
 					<NumberInput
 						placeholder="¥1000"
 						hideControls
 						prefix="¥"
 						{...form.getInputProps("amount")}
 					/>
-				</Field>
+				</ExpenseFormField>
 				<Button type="submit" mt="lg" fullWidth loading={form.submitting}>
 					建て替え記録を追加
 				</Button>
 			</Stack>
 		</form>
-	);
-}
-
-function Field({
-	children,
-	supportingText,
-}: {
-	children: React.ReactNode;
-	supportingText: string;
-}) {
-	return (
-		<Flex gap="lg" align="center">
-			<Box flex="1">{children}</Box>
-			<Box
-				style={{
-					flexBasis: "max(70px, 30%)",
-				}}
-			>
-				<Text fw="bold">{supportingText}</Text>
-			</Box>
-		</Flex>
 	);
 }

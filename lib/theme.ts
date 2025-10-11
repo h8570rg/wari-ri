@@ -40,13 +40,6 @@ export const theme = createTheme({
 				radius: "md",
 			},
 		},
-		Paper: {
-			defaultProps: {
-				shadow: "sm",
-				radius: "md",
-				p: "lg",
-			},
-		},
 		TextInput: {
 			defaultProps: {
 				size: "lg",
