@@ -37,7 +37,8 @@ export function NewExpenseForm({ group }: Props) {
 		await createExpense({
 			groupId: group.id,
 			payerId: values.payerId,
-			amount: values.amount ?? 0,
+			// biome-ignore lint/style/noNonNullAssertion: バリデーションしているので必ず存在する
+			amount: values.amount!,
 			description: values.description,
 			participantIds: values.participantIds,
 		});
@@ -77,7 +78,6 @@ export function NewExpenseForm({ group }: Props) {
 				<Field supportingText="かかった">
 					<NumberInput
 						placeholder="¥1000"
-						min={1}
 						hideControls
 						prefix="¥"
 						{...form.getInputProps("amount")}
