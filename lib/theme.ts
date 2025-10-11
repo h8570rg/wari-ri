@@ -29,7 +29,7 @@ export const theme = createTheme({
 			},
 			styles: {
 				root: {
-					padding: "1rem 1.5rem 2rem",
+					padding: "1rem 1.5rem 4rem",
 				},
 			},
 		},

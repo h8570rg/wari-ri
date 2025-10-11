@@ -1,72 +1,31 @@
 "use client";
 
-import {
-	Alert,
-	Box,
-	Button,
-	Card,
-	Group,
-	Stack,
-	Text,
-	Title,
-} from "@mantine/core";
-import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
-import type { GroupDocument } from "@/lib/data/group";
-import { createSettlement } from "./actions";
+import { Alert, Box, Divider, Group, Stack, Text, Title } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+import { Fragment } from "react";
+import type { Aggregation } from "@/lib/data/group";
+import { SettlementButton } from "./settlement-button";
 
-type Props = {
+export function SettlementSummary({
+	groupId,
+	users,
+	aggregation,
+}: {
 	groupId: string;
-	group: GroupDocument;
-};
-
-type Settlement = {
-	from: string;
-	fromUserId: string;
-	to: string;
-	toUserId: string;
-	amount: number;
-};
-
-export function SettlementSummary({ groupId, group }: Props) {
-	const aggregation = group.aggregation;
-
-	// 集計データが存在しない場合は、データがないことを示す
-	if (!aggregation) {
-		return (
-			<Card shadow="sm" padding="lg" radius="md" withBorder>
-				<Stack gap="md">
-					<Title order={2} size="h3">
-						精算サマリー
-					</Title>
-					<Alert
-						icon={<IconInfoCircle size="1rem" />}
-						title="データがありません"
-						color="gray"
-					>
-						<Text size="sm">
-							まだ建て替え記録がありません。建て替え記録を追加すると、自動的に精算サマリーが生成されます。
-						</Text>
-					</Alert>
-				</Stack>
-			</Card>
-		);
-	}
-
-	if (aggregation.totalExpenses === 0) {
-		return null;
-	}
-
+	users: { id: string; name: string }[];
+	aggregation: Aggregation;
+}) {
 	// aggregationから残りの精算必要額を取得
 	const remainingSettlements = aggregation.remainingSettlements || [];
 
 	// ユーザー名を含む精算情報を構築
 	const settlements = remainingSettlements.map(
 		(settlement: { fromUserId: string; toUserId: string; amount: number }) => {
-			const fromUser = group.users.find(
+			const fromUser = users.find(
 				(user: { id: string; name: string }) =>
 					user.id === settlement.fromUserId,
 			);
-			const toUser = group.users.find(
+			const toUser = users.find(
 				(user: { id: string; name: string }) => user.id === settlement.toUserId,
 			);
 			return {
@@ -86,14 +45,11 @@ export function SettlementSummary({ groupId, group }: Props) {
 			<Title order={2} size="sm" mb="md" fw="normal">
 				精算方法
 			</Title>
-			<Stack gap="md">
-				{/* 精算が必要な場合 */}
-				{hasUncompletedSettlements && (
-					<Stack gap="xs">
-						<Text fw={500} size="sm">
-							必要な精算
-						</Text>
-						{settlements.map((settlement: Settlement) => (
+			{/* 精算が必要な場合 */}
+			{hasUncompletedSettlements && (
+				<Stack gap="xs">
+					{settlements.map((settlement) => (
+						<Fragment key={`${settlement.fromUserId}-${settlement.toUserId}`}>
 							<Group
 								key={`${settlement.fromUserId}-${settlement.toUserId}`}
 								justify="space-between"
@@ -103,31 +59,32 @@ export function SettlementSummary({ groupId, group }: Props) {
 								</Text>
 								<Group gap="xs">
 									<Text fw={500}>¥{settlement.amount.toLocaleString()}</Text>
-									<form
-										action={createSettlement.bind(null, {
-											groupId,
-											fromUserId: settlement.fromUserId,
-											toUserId: settlement.toUserId,
-											amount: settlement.amount,
-										})}
-									>
-										<Button size="xs" type="submit">
-											精算完了
-										</Button>
-									</form>
+									<SettlementButton
+										groupId={groupId}
+										fromUser={{
+											id: settlement.fromUserId,
+											name: settlement.from,
+										}}
+										toUser={{
+											id: settlement.toUserId,
+											name: settlement.to,
+										}}
+										amount={settlement.amount}
+									/>
 								</Group>
 							</Group>
-						))}
-					</Stack>
-				)}
+							<Divider />
+						</Fragment>
+					))}
+				</Stack>
+			)}
 
-				{/* 精算完了の場合 */}
-				{!hasUncompletedSettlements && (
-					<Alert color="green" icon={<IconCheck size="1rem" />}>
-						すべての精算が完了しています
-					</Alert>
-				)}
-			</Stack>
+			{/* 精算完了の場合 */}
+			{!hasUncompletedSettlements && (
+				<Alert color="green" icon={<IconCheck size="1rem" />}>
+					すべての精算が完了しています
+				</Alert>
+			)}
 		</Box>
 	);
 }
