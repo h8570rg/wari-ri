@@ -16,9 +16,9 @@ export function SettlementDeleteButton({
 	const [opened, { open, close }] = useDisclosure(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	function handleDelete() {
+	async function handleDelete() {
 		setIsDeleting(true);
-		deleteSettlement({ groupId, settlementId });
+		await deleteSettlement({ groupId, settlementId });
 	}
 
 	return (
