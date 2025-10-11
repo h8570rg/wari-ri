@@ -1,4 +1,4 @@
-import { Box, Container } from "@mantine/core";
+import { Container } from "@mantine/core";
 import type { Route } from "next";
 import { PageHeader } from "@/components/page-header";
 import { getGroup } from "@/lib/data/group";
@@ -13,14 +13,12 @@ export default async function EditGroupPage({ params }: Props) {
 	const group = await getGroup(id);
 
 	return (
-		<Box>
+		<Container>
 			<PageHeader
 				title="グループ編集"
 				backLinkHref={`/groups/${id}` as Route}
 			/>
-			<Container>
-				<EditGroupForm group={group} />
-			</Container>
-		</Box>
+			<EditGroupForm group={group} />
+		</Container>
 	);
 }

@@ -3,8 +3,8 @@
 import { Button, Group, Pill, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
+import { newGroupSchema, userNameSchema } from "@/lib/schema";
 import { createGroup } from "./actions";
-import { newGroupSchema, userNameSchema } from "./schema";
 
 export function NewGroupForm() {
 	const userNameForm = useForm({
@@ -39,7 +39,6 @@ export function NewGroupForm() {
 			/>
 			<TextInput
 				mt="md"
-				w="100%"
 				label="メンバー"
 				placeholder="やまだ"
 				{...userNameForm.getInputProps("userName")}
@@ -94,7 +93,7 @@ export function NewGroupForm() {
 					</Pill>
 				))}
 			</Pill.Group>
-			<Button type="submit" mt="lg" w="100%" loading={form.submitting}>
+			<Button type="submit" mt="xl" fullWidth loading={form.submitting}>
 				グループを作成
 			</Button>
 		</form>
