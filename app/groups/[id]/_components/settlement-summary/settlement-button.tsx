@@ -39,7 +39,7 @@ export function SettlementButton({
 
 	return (
 		<>
-			<Button size="xs" type="submit" onClick={open}>
+			<Button size="xs" onClick={open}>
 				精算する
 			</Button>
 			<Modal opened={opened} onClose={close} title="精算" centered>
