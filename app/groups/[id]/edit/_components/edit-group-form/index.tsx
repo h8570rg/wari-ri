@@ -1,31 +1,22 @@
 "use client";
 
-import {
-	ActionIcon,
-	Button,
-	Flex,
-	Group,
-	Modal,
-	Pill,
-	Stack,
-	Text,
-	TextInput,
-	Title,
-} from "@mantine/core";
+import { Button, Flex, Group, Modal, Pill, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { IconEdit } from "@tabler/icons-react";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import type { GroupDocument } from "@/lib/data/group";
+import { editGroupSchema, userNameSchema } from "@/lib/schema";
 import { updateGroup } from "./actions";
-import { editGroupSchema, userNameSchema } from "./schema";
 
 type Props = {
 	group: GroupDocument;
 };
 
 export function EditGroupForm({ group }: Props) {
-	const [editModalOpened, setEditModalOpened] = useState(false);
+	const [editModalOpened, { open: openEditModal, close: closeEditModal }] =
+		useDisclosure(false);
 	const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
 	const userNameForm = useForm({
@@ -61,7 +52,7 @@ export function EditGroupForm({ group }: Props) {
 	const handleEditMember = (index: number, currentName: string) => {
 		setEditingIndex(index);
 		editUserNameForm.setValues({ userName: currentName });
-		setEditModalOpened(true);
+		openEditModal();
 	};
 
 	const handleUpdateMemberName = () => {
@@ -83,43 +74,35 @@ export function EditGroupForm({ group }: Props) {
 		}
 
 		form.setFieldValue(`users.${editingIndex}.name`, newName);
-		setEditModalOpened(false);
+		closeEditModal();
 		setEditingIndex(null);
 		editUserNameForm.reset();
 	};
 
 	return (
-		<Stack gap="lg">
-			<Title order={1} size="h2" ta="center">
-				グループを編集
-			</Title>
-
-			<Text size="sm" c="dimmed" ta="center">
-				グループ名の変更、メンバーの追加・名前変更ができます
-			</Text>
-
+		<>
 			<form onSubmit={form.onSubmit(handleSubmit)}>
-				<Stack gap="md">
-					<TextInput
-						label="グループ名"
-						placeholder="北海道旅行"
-						{...form.getInputProps("name")}
-					/>
-
-					<div>
-						<Text size="sm" fw={500} mb={5}>
-							メンバーを追加
-						</Text>
+				<TextInput
+					label="グループ名"
+					placeholder="北海道旅行"
+					{...form.getInputProps("name")}
+				/>
+				<TextInput
+					mt="md"
+					label="メンバー"
+					placeholder="やまだ"
+					{...userNameForm.getInputProps("userName")}
+					error={
+						userNameForm.getInputProps("userName").error ?? form.errors.users
+					}
+					styles={{
+						wrapper: {
+							flex: 1,
+						},
+					}}
+					inputContainer={(children) => (
 						<Group gap="xs">
-							<TextInput
-								placeholder="やまだ"
-								flex={1}
-								{...userNameForm.getInputProps("userName")}
-								error={
-									userNameForm.getInputProps("userName").error ??
-									form.errors.users
-								}
-							/>
+							{children}
 							<Button
 								onClick={() => {
 									const userNameValue = userNameForm.getValues().userName;
@@ -147,81 +130,49 @@ export function EditGroupForm({ group }: Props) {
 								追加
 							</Button>
 						</Group>
-					</div>
-
-					{form.values.users.length > 0 && (
-						<div>
-							<Text size="sm" fw={500} mb="xs">
-								現在のメンバー（クリックで名前変更）
-							</Text>
-							<Flex gap="xs" wrap="wrap">
-								{form.values.users.map((user, index) => (
-									<Pill
-										key={`${user.id}-${index}`}
-										size="md"
-										style={{ paddingRight: 4, cursor: "pointer" }}
-										onClick={() => handleEditMember(index, user.name)}
-									>
-										<Group gap={4} wrap="nowrap">
-											<Text size="sm">{user.name}</Text>
-											<ActionIcon size="xs" variant="subtle" color="gray">
-												<IconEdit size={12} />
-											</ActionIcon>
-										</Group>
-									</Pill>
-								))}
-							</Flex>
-						</div>
 					)}
+				/>
 
-					<Button
-						type="submit"
-						mt="lg"
-						w="100%"
-						size="md"
-						loading={form.submitting}
-					>
-						グループを更新
-					</Button>
-				</Stack>
+				{form.values.users.length > 0 && (
+					<Pill.Group mt="xs">
+						{form.values.users.map((user, index) => (
+							<Pill
+								key={`${user.id}-${index}`}
+								size="lg"
+								onClick={() => handleEditMember(index, user.name)}
+							>
+								<Flex align="center">
+									{user.name}
+									<IconEdit size="16px" style={{ marginLeft: "4px" }} />
+								</Flex>
+							</Pill>
+						))}
+					</Pill.Group>
+				)}
+				<Button type="submit" mt="xl" fullWidth loading={form.submitting}>
+					グループを更新
+				</Button>
 			</form>
 
 			<Modal
 				opened={editModalOpened}
 				onClose={() => {
-					setEditModalOpened(false);
+					closeEditModal();
 					setEditingIndex(null);
 					editUserNameForm.reset();
 				}}
 				title="メンバー名を編集"
 				centered
 			>
-				<Stack gap="md">
-					<TextInput
-						label="新しい名前"
-						placeholder="新しいメンバー名"
-						{...editUserNameForm.getInputProps("userName")}
-					/>
-
-					<Group gap="md" mt="md">
-						<Button
-							variant="outline"
-							flex={1}
-							onClick={() => {
-								setEditModalOpened(false);
-								setEditingIndex(null);
-								editUserNameForm.reset();
-							}}
-						>
-							キャンセル
-						</Button>
-
-						<Button flex={1} onClick={handleUpdateMemberName}>
-							更新
-						</Button>
-					</Group>
-				</Stack>
+				<TextInput
+					label="名前"
+					placeholder="やまだ"
+					{...editUserNameForm.getInputProps("userName")}
+				/>
+				<Group justify="flex-end" mt="xl">
+					<Button onClick={handleUpdateMemberName}>更新</Button>
+				</Group>
 			</Modal>
-		</Stack>
+		</>
 	);
 }

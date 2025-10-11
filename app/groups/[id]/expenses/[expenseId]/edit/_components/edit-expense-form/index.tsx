@@ -16,9 +16,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import { ExpenseFormField } from "@/app/groups/[id]/expenses/_components/expense-form-field";
-import { expenseSchema } from "@/app/groups/[id]/expenses/_components/expense-schema";
 import type { ExpenseDocument } from "@/lib/data/expense";
 import type { GroupDocument } from "@/lib/data/group";
+import { expenseSchema } from "@/lib/schema";
 import { deleteExpense, updateExpense } from "./actions";
 
 type Props = {

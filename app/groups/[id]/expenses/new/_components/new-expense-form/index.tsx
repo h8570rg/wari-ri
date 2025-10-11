@@ -12,8 +12,8 @@ import {
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { ExpenseFormField } from "@/app/groups/[id]/expenses/_components/expense-form-field";
-import { expenseSchema } from "@/app/groups/[id]/expenses/_components/expense-schema";
 import type { GroupDocument } from "@/lib/data/group";
+import { expenseSchema } from "@/lib/schema";
 import { createExpense } from "./actions";
 
 type Props = {
