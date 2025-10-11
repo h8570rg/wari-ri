@@ -5,11 +5,15 @@
 			"queryScope": "COLLECTION_GROUP",
 			"fields": [
 				{
-					"fieldPath": "type",
+					"fieldPath": "payerId",
 					"order": "ASCENDING"
 				},
 				{
 					"fieldPath": "createdAt",
+					"order": "DESCENDING"
+				},
+				{
+					"fieldPath": "__name__",
 					"order": "DESCENDING"
 				}
 			]
@@ -19,11 +23,15 @@
 			"queryScope": "COLLECTION_GROUP",
 			"fields": [
 				{
-					"fieldPath": "payerId",
+					"fieldPath": "type",
 					"order": "ASCENDING"
 				},
 				{
 					"fieldPath": "createdAt",
+					"order": "DESCENDING"
+				},
+				{
+					"fieldPath": "__name__",
 					"order": "DESCENDING"
 				}
 			]

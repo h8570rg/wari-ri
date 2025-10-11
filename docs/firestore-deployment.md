@@ -28,68 +28,48 @@
 
 ## デプロイ手順
 
-### 1. 事前準備
+### 環境別デプロイ戦略
 
-Firebase CLIがインストールされていることを確認してください：
+- **本番環境 (wari-ri)**: mainブランチへのマージ時に自動デプロイ（GitHub Actions）
+- **開発環境 (wari-ri-dev)**: ローカルから手動デプロイ（npmスクリプト経由）
 
-```bash
-npm install -g firebase-tools
-```
+### 事前準備
 
-### 2. ログイン
-
-Firebaseアカウントにログインします：
+Firebase CLIにログインしていることを確認してください：
 
 ```bash
 firebase login
 ```
 
-### 3. プロジェクトの選択
+### 開発環境へのデプロイ
 
-デプロイ先のプロジェクトを選択します：
-
-```bash
-# dev環境の場合
-firebase use dev
-
-# 本番環境の場合
-firebase use default
-```
-
-### 4. ルールのデプロイ
-
-セキュリティルールとインデックスをデプロイします：
+package.jsonに定義されたスクリプトを使用してデプロイします：
 
 ```bash
-# セキュリティルールのみ
-firebase deploy --only firestore:rules
+# Firestore Rules + Indexes の両方
+npm run deploy:dev:firestore
 
-# インデックスのみ
-firebase deploy --only firestore:indexes
+# Rulesのみ
+npm run deploy:dev:rules
 
-# 両方
-firebase deploy --only firestore
+# Indexesのみ
+npm run deploy:dev:indexes
+
+# すべて（Functions + Firestore Rules + Indexes）
+npm run deploy:dev
 ```
 
-### 5. デプロイの確認
+### 本番環境へのデプロイ
 
-デプロイが完了したら、Firebaseコンソールでルールが正しく適用されていることを確認してください。
+本番環境へは、mainブランチにマージすることで自動的にデプロイされます。
+手動でデプロイする必要はありません。
 
-## 環境別デプロイ
+### デプロイの確認
 
-### dev環境
+デプロイが完了したら、Firebaseコンソールでルールが正しく適用されていることを確認してください：
 
-```bash
-firebase use dev
-firebase deploy --only firestore
-```
-
-### 本番環境
-
-```bash
-firebase use default
-firebase deploy --only firestore
-```
+- [開発環境コンソール](https://console.firebase.google.com/project/wari-ri-dev)
+- [本番環境コンソール](https://console.firebase.google.com/project/wari-ri)
 
 ## トラブルシューティング
 
