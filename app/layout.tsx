@@ -6,7 +6,7 @@ import {
 	mantineHtmlProps,
 } from "@mantine/core";
 import type { Metadata } from "next";
-import { mochiyPopOne } from "@/lib/fonts";
+import { mPlusRounded1c } from "@/lib/fonts";
 import "./global.css";
 import { theme } from "@/lib/theme";
 
@@ -21,21 +21,21 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="ja" {...mantineHtmlProps} className={mochiyPopOne.variable}>
+		<html lang="ja" {...mantineHtmlProps} className={mPlusRounded1c.variable}>
 			<head>
 				<ColorSchemeScript />
 			</head>
 			<body>
 				<MantineProvider theme={theme}>
 					<Box pos="relative" mih="100dvh">
-						<Box
+						{/* <Box
 							pos="absolute"
 							inset={0}
 							style={{
 								background:
 									"linear-gradient(176deg, rgba(233, 233, 233, 1), rgba(172, 172, 172, 1))",
 							}}
-						/>
+						/> */}
 						<Box pos="relative">{children}</Box>
 					</Box>
 				</MantineProvider>

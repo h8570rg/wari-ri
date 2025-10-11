@@ -1,4 +1,5 @@
 import { createTheme, DEFAULT_THEME } from "@mantine/core";
+import { mPlusRounded1c } from "./fonts";
 
 export const theme = createTheme({
 	// プライマリカラー（緑系を割り勘アプリのメインカラーとして設定）
@@ -6,8 +7,11 @@ export const theme = createTheme({
 
 	// カラーパレット
 	colors: {
-		primary: DEFAULT_THEME.colors.dark,
+		primary: DEFAULT_THEME.colors.orange,
+		secondary: DEFAULT_THEME.colors.gray,
 	},
+
+	fontFamily: mPlusRounded1c.style.fontFamily,
 
 	// デフォルトの半径を設定
 	defaultRadius: "md",
@@ -23,6 +27,11 @@ export const theme = createTheme({
 
 	// コンポーネントのデフォルトプロパティ
 	components: {
+		ActionIcon: {
+			defaultProps: {
+				variant: "light",
+			},
+		},
 		Container: {
 			defaultProps: {
 				size: "md",
@@ -35,6 +44,7 @@ export const theme = createTheme({
 		},
 		Button: {
 			defaultProps: {
+				size: "lg",
 				variant: "filled",
 				radius: "md",
 			},
@@ -48,13 +58,8 @@ export const theme = createTheme({
 		},
 		TextInput: {
 			defaultProps: {
-				size: "md",
+				size: "lg",
 				variant: "filled",
-			},
-			styles: {
-				input: {
-					backgroundColor: "white",
-				},
 			},
 		},
 	},

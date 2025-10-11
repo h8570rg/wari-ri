@@ -13,14 +13,7 @@ export function PageHeader({ title }: { title: string }) {
 			>
 				<Box pt="md" px="xl">
 					<Center>
-						<Text
-							component={NextLink}
-							href="/"
-							c="white"
-							size="xl"
-							fw={400}
-							ff="var(--font-mochiy-pop-one)"
-						>
+						<Text component={NextLink} href="/" c="white" size="xl" fw={400}>
 							ワリーリ
 						</Text>
 					</Center>
