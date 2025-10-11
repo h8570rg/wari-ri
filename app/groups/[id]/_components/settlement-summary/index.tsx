@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 import type { GroupDocument } from "@/lib/data/group";
-import { createSettlement } from "./settlement-summary/actions";
+import { createSettlement } from "./actions";
 
 type Props = {
 	groupId: string;
@@ -83,7 +83,7 @@ export function SettlementSummary({ groupId, group }: Props) {
 
 	return (
 		<Box component="section">
-			<Title order={2} size="sm" mb="md">
+			<Title order={2} size="sm" mb="md" fw="normal">
 				精算方法
 			</Title>
 			<Stack gap="md">

@@ -35,7 +35,7 @@ export default async function GroupPage({ params }: Props) {
 			>
 				建て替えを追加
 			</Button>
-			<Stack gap="lg" mt="lg">
+			<Stack gap="xl" mt="lg">
 				{activities.length > 0 ? (
 					<>
 						<ActivityHistory groupId={id} />
