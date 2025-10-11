@@ -1,4 +1,12 @@
-import { ActionIcon, Badge, Box, Flex, Group, Title } from "@mantine/core";
+import {
+	ActionIcon,
+	Badge,
+	Box,
+	Flex,
+	Group,
+	Text,
+	Title,
+} from "@mantine/core";
 import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
 import NextLink from "next/link";
@@ -28,6 +36,11 @@ export async function GroupInfo({ group }: { group: GroupDocument }) {
 					</Badge>
 				))}
 			</Group>
+			{group.aggregation?.totalExpenses && (
+				<Text mt="sm" size="xs" c="dimmed">
+					総支出額: ¥{group.aggregation?.totalExpenses?.toLocaleString()}
+				</Text>
+			)}
 		</Box>
 	);
 }

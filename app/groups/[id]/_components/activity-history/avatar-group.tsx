@@ -11,7 +11,7 @@ export function AvatarGroup({
 	}[];
 }) {
 	return (
-		<Avatar.Group>
+		<Avatar.Group spacing="xs">
 			{participants.map((participant) => (
 				<Avatar
 					key={participant.id}

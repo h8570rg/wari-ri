@@ -35,11 +35,15 @@ export default async function GroupPage({ params }: Props) {
 			>
 				建て替えを追加
 			</Button>
-			<Stack gap="xl" mt="lg">
-				{activities.length > 0 ? (
+			<Stack gap="69" mt="xl">
+				{activities.length > 0 && group.aggregation ? (
 					<>
 						<ActivityHistory groupId={id} />
-						<SettlementSummary groupId={id} group={group} />
+						<SettlementSummary
+							groupId={id}
+							users={group.users}
+							aggregation={group.aggregation}
+						/>
 					</>
 				) : (
 					<Alert
