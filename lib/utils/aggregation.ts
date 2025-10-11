@@ -19,23 +19,36 @@ export function createEmptyAggregation(): Aggregation {
 }
 
 /**
- * Expenseの差分を既存のaggregationに加算して新しいaggregationを作成
+ * userBalancesをディープコピー
  */
-function applyExpenseAdd(
+function deepCopyUserBalances(userBalances: Aggregation["userBalances"]): {
+	[userId: string]: UserBalance;
+} {
+	const copied: { [userId: string]: UserBalance } = {};
+
+	for (const userId in userBalances) {
+		copied[userId] = {
+			paid: userBalances[userId].paid,
+			owes: userBalances[userId].owes,
+			balance: userBalances[userId].balance,
+		};
+	}
+
+	return copied;
+}
+
+/**
+ * Expenseの差分を既存のaggregationに適用して新しいaggregationを作成
+ * @param multiplier 1で加算、-1で減算
+ */
+function applyExpenseChange(
 	current: Aggregation,
 	expense: Pick<ExpenseDocument, "amount" | "payerId" | "participantIds">,
 	users: GroupDocument["users"],
+	multiplier: 1 | -1,
 ): Aggregation {
-	const newUserBalances: { [userId: string]: UserBalance } = {};
-
 	// 既存のuserBalancesをディープコピー
-	for (const userId in current.userBalances) {
-		newUserBalances[userId] = {
-			paid: current.userBalances[userId].paid,
-			owes: current.userBalances[userId].owes,
-			balance: current.userBalances[userId].balance,
-		};
-	}
+	const newUserBalances = deepCopyUserBalances(current.userBalances);
 
 	// 支払った人の更新
 	if (!newUserBalances[expense.payerId]) {
@@ -45,7 +58,7 @@ function applyExpenseAdd(
 			balance: 0,
 		};
 	}
-	newUserBalances[expense.payerId].paid += expense.amount;
+	newUserBalances[expense.payerId].paid += expense.amount * multiplier;
 
 	// 各参加者の負担額を計算（端数は支払者が負担）
 	const participantCount = expense.participantIds.length;
@@ -63,7 +76,7 @@ function applyExpenseAdd(
 		// 支払者の場合は端数を加算
 		const amountPerPerson =
 			participantId === expense.payerId ? baseAmount + remainder : baseAmount;
-		newUserBalances[participantId].owes += amountPerPerson;
+		newUserBalances[participantId].owes += amountPerPerson * multiplier;
 	}
 
 	// バランスを再計算
@@ -73,13 +86,24 @@ function applyExpenseAdd(
 	}
 
 	return {
-		totalExpenses: (current.totalExpenses || 0) + expense.amount,
+		totalExpenses: (current.totalExpenses || 0) + expense.amount * multiplier,
 		userBalances: newUserBalances,
 		remainingSettlements: calculateTheoreticalSettlements(
 			newUserBalances,
 			users,
 		),
 	};
+}
+
+/**
+ * Expenseの差分を既存のaggregationに加算して新しいaggregationを作成
+ */
+function applyExpenseAdd(
+	current: Aggregation,
+	expense: Pick<ExpenseDocument, "amount" | "payerId" | "participantIds">,
+	users: GroupDocument["users"],
+): Aggregation {
+	return applyExpenseChange(current, expense, users, 1);
 }
 
 /**
@@ -90,60 +114,7 @@ function applyExpenseSubtract(
 	expense: Pick<ExpenseDocument, "amount" | "payerId" | "participantIds">,
 	users: GroupDocument["users"],
 ): Aggregation {
-	const newUserBalances: { [userId: string]: UserBalance } = {};
-
-	// 既存のuserBalancesをディープコピー
-	for (const userId in current.userBalances) {
-		newUserBalances[userId] = {
-			paid: current.userBalances[userId].paid,
-			owes: current.userBalances[userId].owes,
-			balance: current.userBalances[userId].balance,
-		};
-	}
-
-	// 支払った人の更新
-	if (!newUserBalances[expense.payerId]) {
-		newUserBalances[expense.payerId] = {
-			paid: 0,
-			owes: 0,
-			balance: 0,
-		};
-	}
-	newUserBalances[expense.payerId].paid -= expense.amount;
-
-	// 各参加者の負担額を計算（端数は支払者が負担）
-	const participantCount = expense.participantIds.length;
-	const baseAmount = Math.floor(expense.amount / participantCount);
-	const remainder = expense.amount - baseAmount * participantCount;
-
-	for (const participantId of expense.participantIds) {
-		if (!newUserBalances[participantId]) {
-			newUserBalances[participantId] = {
-				paid: 0,
-				owes: 0,
-				balance: 0,
-			};
-		}
-		// 支払者の場合は端数を加算
-		const amountPerPerson =
-			participantId === expense.payerId ? baseAmount + remainder : baseAmount;
-		newUserBalances[participantId].owes -= amountPerPerson;
-	}
-
-	// バランスを再計算
-	for (const userId in newUserBalances) {
-		newUserBalances[userId].balance =
-			newUserBalances[userId].paid - newUserBalances[userId].owes;
-	}
-
-	return {
-		totalExpenses: (current.totalExpenses || 0) - expense.amount,
-		userBalances: newUserBalances,
-		remainingSettlements: calculateTheoreticalSettlements(
-			newUserBalances,
-			users,
-		),
-	};
+	return applyExpenseChange(current, expense, users, -1);
 }
 
 /**
@@ -154,16 +125,8 @@ function applySettlement(
 	settlement: Pick<SettlementDocument, "amount" | "fromUserId" | "toUserId">,
 	users: GroupDocument["users"],
 ): Aggregation {
-	const newUserBalances: { [userId: string]: UserBalance } = {};
-
 	// 既存のuserBalancesをディープコピー
-	for (const userId in current.userBalances) {
-		newUserBalances[userId] = {
-			paid: current.userBalances[userId].paid,
-			owes: current.userBalances[userId].owes,
-			balance: current.userBalances[userId].balance,
-		};
-	}
+	const newUserBalances = deepCopyUserBalances(current.userBalances);
 
 	// fromUserとtoUserの更新
 	if (!newUserBalances[settlement.fromUserId]) {
