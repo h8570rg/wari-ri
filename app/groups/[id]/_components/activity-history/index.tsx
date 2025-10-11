@@ -60,7 +60,7 @@ function ActivityHistoryItem({
 		new Date(activity.createdAt).getFullYear() === new Date().getFullYear();
 
 	return (
-		<Flex key={activity.id} justify="space-between">
+		<Flex justify="space-between">
 			<Stack gap="4" w="100%">
 				<Text size="xs" c="dimmed">
 					{Intl.DateTimeFormat("ja-JP", {
