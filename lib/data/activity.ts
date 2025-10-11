@@ -1,16 +1,11 @@
 import {
 	collection,
-	deleteDoc,
 	doc,
-	getDoc,
 	getDocs,
 	orderBy,
 	type QueryDocumentSnapshot,
 	query,
 	type SnapshotOptions,
-	serverTimestamp,
-	setDoc,
-	updateDoc,
 	type WithFieldValue,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -70,40 +65,4 @@ export async function getActivities(groupId: string) {
 	);
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
-}
-
-export async function createActivity(
-	groupId: string,
-	activity: Omit<ActivityDocument, keyof BaseDocument>,
-) {
-	const newDocRef = getNewActivityDocRef(groupId);
-	await setDoc(newDocRef, {
-		id: newDocRef.id,
-		createdAt: serverTimestamp(),
-		updatedAt: serverTimestamp(),
-		...activity,
-	});
-	return newDocRef.id;
-}
-
-export async function getActivity(groupId: string, activityId: string) {
-	const docRef = getActivityDocRef(groupId, activityId);
-	const docSnap = await getDoc(docRef);
-	const data = docSnap.data();
-	if (!data) {
-		throw new Error("Activity not found");
-	}
-	return data;
-}
-
-export async function updateActivity(
-	groupId: string,
-	activityId: string,
-	activity: Partial<Omit<ActivityDocument, keyof BaseDocument>>,
-) {
-	await updateDoc(getActivityDocRef(groupId, activityId), activity);
-}
-
-export async function deleteActivity(groupId: string, activityId: string) {
-	await deleteDoc(getActivityDocRef(groupId, activityId));
 }

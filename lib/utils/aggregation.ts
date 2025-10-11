@@ -118,12 +118,14 @@ function applyExpenseSubtract(
 }
 
 /**
- * Settlementを既存のaggregationに適用して新しいaggregationを作成
+ * Settlementの差分を既存のaggregationに適用して新しいaggregationを作成
+ * @param multiplier 1で加算、-1で減算
  */
-function applySettlement(
+function applySettlementChange(
 	current: Aggregation,
 	settlement: Pick<SettlementDocument, "amount" | "fromUserId" | "toUserId">,
 	users: GroupDocument["users"],
+	multiplier: 1 | -1,
 ): Aggregation {
 	// 既存のuserBalancesをディープコピー
 	const newUserBalances = deepCopyUserBalances(current.userBalances);
@@ -145,10 +147,10 @@ function applySettlement(
 	}
 
 	// Settlementは支払者と参加者が1人ずつのExpenseと同じ
-	// fromUser（支払者）: 支払った額が増える
-	newUserBalances[settlement.fromUserId].paid += settlement.amount;
-	// toUser（参加者）: 負担する額が増える
-	newUserBalances[settlement.toUserId].owes += settlement.amount;
+	// fromUser（支払者）: 支払った額が増える/減る
+	newUserBalances[settlement.fromUserId].paid += settlement.amount * multiplier;
+	// toUser（参加者）: 負担する額が増える/減る
+	newUserBalances[settlement.toUserId].owes += settlement.amount * multiplier;
 
 	// バランスを再計算（全ユーザー）
 	for (const userId in newUserBalances) {
@@ -164,6 +166,28 @@ function applySettlement(
 			users,
 		),
 	};
+}
+
+/**
+ * Settlementの差分を既存のaggregationに加算して新しいaggregationを作成
+ */
+function applySettlementAdd(
+	current: Aggregation,
+	settlement: Pick<SettlementDocument, "amount" | "fromUserId" | "toUserId">,
+	users: GroupDocument["users"],
+): Aggregation {
+	return applySettlementChange(current, settlement, users, 1);
+}
+
+/**
+ * Settlementの差分を既存のaggregationから減算して新しいaggregationを作成
+ */
+function applySettlementSubtract(
+	current: Aggregation,
+	settlement: Pick<SettlementDocument, "amount" | "fromUserId" | "toUserId">,
+	users: GroupDocument["users"],
+): Aggregation {
+	return applySettlementChange(current, settlement, users, -1);
 }
 
 /**
@@ -272,5 +296,17 @@ export function calculateAggregationForAddSettlement(
 	users: GroupDocument["users"],
 ): Aggregation {
 	const aggregation = currentAggregation || createEmptyAggregation();
-	return applySettlement(aggregation, settlement, users);
+	return applySettlementAdd(aggregation, settlement, users);
+}
+
+/**
+ * Settlement削除時のaggregation更新を計算
+ */
+export function calculateAggregationForDeleteSettlement(
+	currentAggregation: Aggregation | undefined,
+	settlement: Pick<SettlementDocument, "amount" | "fromUserId" | "toUserId">,
+	users: GroupDocument["users"],
+): Aggregation {
+	const aggregation = currentAggregation || createEmptyAggregation();
+	return applySettlementSubtract(aggregation, settlement, users);
 }

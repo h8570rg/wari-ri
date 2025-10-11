@@ -8,7 +8,10 @@ import {
 	type WithFieldValue,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { calculateAggregationForAddSettlement } from "../utils/aggregation";
+import {
+	calculateAggregationForAddSettlement,
+	calculateAggregationForDeleteSettlement,
+} from "../utils/aggregation";
 import type { BaseDocument } from ".";
 import { getGroupDocRef, groupCollectionName } from "./group";
 
@@ -111,4 +114,48 @@ export async function getSettlement(groupId: string, settlementId: string) {
 		throw new Error("Settlement not found");
 	}
 	return data;
+}
+
+export async function deleteSettlement(groupId: string, settlementId: string) {
+	const groupRef = getGroupDocRef(groupId);
+	const settlementRef = getSettlementDocRef(groupId, settlementId);
+
+	await runTransaction(db, async (transaction) => {
+		// 1. 現在のgroupデータとsettlementを取得
+		const groupDoc = await transaction.get(groupRef);
+		if (!groupDoc.exists()) {
+			throw new Error("Group not found");
+		}
+
+		const settlementDoc = await transaction.get(settlementRef);
+		if (!settlementDoc.exists()) {
+			throw new Error("Settlement not found");
+		}
+
+		const groupData = groupDoc.data();
+		const settlement = settlementDoc.data();
+
+		// 2. 新しいaggregationを計算
+		const newAggregation = calculateAggregationForDeleteSettlement(
+			groupData.aggregation,
+			{
+				amount: settlement.amount,
+				fromUserId: settlement.fromUserId,
+				toUserId: settlement.toUserId,
+			},
+			groupData.users,
+		);
+
+		// 3. settlementを削除
+		transaction.delete(settlementRef);
+
+		// 4. aggregationを更新
+		transaction.update(groupRef, {
+			aggregation: {
+				...newAggregation,
+				lastCalculatedAt: new Date(),
+			},
+			updatedAt: new Date(),
+		});
+	});
 }
