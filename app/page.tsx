@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, Button, Center, Container, Image, Text } from "@mantine/core";
+import { Box, Button, Container, Image, Stack, Text } from "@mantine/core";
 import NextImage from "next/image";
 import NextLink from "next/link";
 import catImage from "./_assets/cat.png";
+import { RecentGroups } from "./_components/recent-groups";
 
 export default function RootPage() {
 	return (
@@ -44,11 +45,12 @@ export default function RootPage() {
 					<br />
 					しようよ
 				</Text>
-				<Center pos="absolute" bottom={0} left={0} right={0} px="30" pb="40">
+				<Stack pos="absolute" bottom={0} left={0} right={0} px="30" pb="40">
+					<RecentGroups />
 					<Button component={NextLink} href="/groups/new" size="xl" w="100%">
 						グループを作成
 					</Button>
-				</Center>
+				</Stack>
 			</Container>
 		</Box>
 	);

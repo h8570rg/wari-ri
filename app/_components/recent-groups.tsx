@@ -1,7 +1,6 @@
 "use client";
 
-import { Box, type BoxProps, Button, Stack, Text } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
+import { Anchor, Box, type BoxProps, Group, Text } from "@mantine/core";
 import type { Route } from "next";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
@@ -78,26 +77,21 @@ export function RecentGroups(props: BoxProps) {
 
 	return (
 		<Box {...props}>
-			<Text size="sm" c="white" ta="center" mb="md">
+			<Text size="sm" c="white" ta="center" mb="xs">
 				最近閲覧したグループ
 			</Text>
-			<Stack gap="xs" w="100%">
+			<Group gap="xs" w="100%" justify="center">
 				{recentGroups.map((group) => (
-					<Button
+					<Anchor
 						key={group.id}
 						component={NextLink}
 						href={`/groups/${group.id}` as Route}
-						variant="outline"
-						color="white"
-						rightSection={<IconChevronRight size={16} />}
-						justify="space-between"
-						size="sm"
-						w="100%"
+						underline="always"
 					>
 						{group.name}
-					</Button>
+					</Anchor>
 				))}
-			</Stack>
+			</Group>
 		</Box>
 	);
 }
