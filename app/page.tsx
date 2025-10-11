@@ -8,7 +8,7 @@ import catImage from "./_assets/cat.png";
 export default function RootPage() {
 	return (
 		<Box pos="relative" mih="100dvh" style={{ overflow: "hidden" }}>
-			<Box pos="absolute" inset={0} bg="primary.8" />
+			<Box pos="absolute" inset={0} bg="dark.8" />
 			<Text fw={700} size="lg" pos="absolute" top="20px" left="20px" c="white">
 				ワリーリ
 			</Text>
@@ -39,27 +39,13 @@ export default function RootPage() {
 					fw={700}
 					lh="1.3"
 					c="white"
-					style={{
-						textShadow:
-							"2px 2px 8px var(--mantine-color-primary-8), -1px -1px 4px var(--mantine-color-primary-8), 1px -1px 4px var(--mantine-color-primary-8), -1px 1px 4px var(--mantine-color-primary-8)",
-					}}
 				>
 					割り勘
 					<br />
 					しようよ
 				</Text>
 				<Center pos="absolute" bottom={0} left={0} right={0} px="30" pb="40">
-					<Button
-						component={NextLink}
-						href="/groups/new"
-						size="xl"
-						variant="white"
-						w="100%"
-						fw={700}
-						style={{
-							boxShadow: "0 4px 20px rgba(255, 255, 255, 0.2)",
-						}}
-					>
+					<Button component={NextLink} href="/groups/new" size="xl" w="100%">
 						グループを作成
 					</Button>
 				</Center>

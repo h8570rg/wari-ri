@@ -55,7 +55,6 @@ export function NewGroupForm() {
 					<Group gap="xs">
 						{children}
 						<Button
-							size="md"
 							onClick={() => {
 								const userNameValue = userNameForm.getValues().userName;
 								const userNamesValue = form.getValues().userNames;
@@ -74,6 +73,7 @@ export function NewGroupForm() {
 								userNameForm.reset();
 								form.clearFieldError("userNames");
 							}}
+							color="secondary"
 						>
 							追加
 						</Button>
@@ -85,7 +85,6 @@ export function NewGroupForm() {
 					<Pill
 						key={userName}
 						size="lg"
-						bg="green.0"
 						withRemoveButton
 						onRemove={() => {
 							form.removeListItem("userNames", index);
@@ -99,7 +98,7 @@ export function NewGroupForm() {
 				type="submit"
 				mt="lg"
 				w="100%"
-				size="lg"
+				size="xl"
 				loading={form.submitting}
 			>
 				グループを作成

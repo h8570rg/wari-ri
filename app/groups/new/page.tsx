@@ -1,4 +1,4 @@
-import { ActionIcon, Container, Flex, Space, Title } from "@mantine/core";
+import { ActionIcon, Container, Group, Space, Title } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
 import NextLink from "next/link";
 import { NewGroupForm } from "./_components/new-group-form";
@@ -6,15 +6,15 @@ import { NewGroupForm } from "./_components/new-group-form";
 export default function NewGroupPage() {
 	return (
 		<Container>
-			<Flex justify="space-between" align="center" mb="lg">
-				<ActionIcon component={NextLink} href="/" variant="subtle" size="lg">
+			<Group justify="space-between" mb="lg">
+				<ActionIcon component={NextLink} href="/" size="lg" color="secondary">
 					<IconChevronLeft />
 				</ActionIcon>
-				<Title order={1} size="md">
+				<Title order={1} size="lg">
 					グループ作成
 				</Title>
 				<Space w="32" />
-			</Flex>
+			</Group>
 			<NewGroupForm />
 		</Container>
 	);
