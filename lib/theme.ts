@@ -67,5 +67,12 @@ export const theme = createTheme({
 				size: "md",
 			},
 		},
+		Text: {
+			styles: {
+				root: {
+					"--mantine-color-dimmed": DEFAULT_THEME.colors.gray[7],
+				},
+			},
+		},
 	},
 });

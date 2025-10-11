@@ -1,5 +1,5 @@
 import { ActionIcon, Badge, Box, Flex, Group, Title } from "@mantine/core";
-import { IconEdit } from "@tabler/icons-react";
+import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
 import NextLink from "next/link";
 import type { GroupDocument } from "@/lib/data/group";
@@ -18,7 +18,7 @@ export async function GroupInfo({ group }: { group: GroupDocument }) {
 					color="secondary"
 					size="sm"
 				>
-					<IconEdit />
+					<IconPencil />
 				</ActionIcon>
 			</Flex>
 			<Group mt="xs" gap="6">
