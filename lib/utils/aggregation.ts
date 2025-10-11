@@ -75,7 +75,10 @@ function applyExpenseAdd(
 	return {
 		totalExpenses: (current.totalExpenses || 0) + expense.amount,
 		userBalances: newUserBalances,
-		remainingSettlements: calculateRemainingSettlements(newUserBalances, users),
+		remainingSettlements: calculateTheoreticalSettlements(
+			newUserBalances,
+			users,
+		),
 	};
 }
 
@@ -136,7 +139,10 @@ function applyExpenseSubtract(
 	return {
 		totalExpenses: (current.totalExpenses || 0) - expense.amount,
 		userBalances: newUserBalances,
-		remainingSettlements: calculateRemainingSettlements(newUserBalances, users),
+		remainingSettlements: calculateTheoreticalSettlements(
+			newUserBalances,
+			users,
+		),
 	};
 }
 
@@ -190,25 +196,16 @@ function applySettlement(
 	return {
 		totalExpenses: current.totalExpenses || 0, // settlementは総支出に影響しない
 		userBalances: newUserBalances,
-		remainingSettlements: calculateRemainingSettlements(newUserBalances, users),
+		remainingSettlements: calculateTheoreticalSettlements(
+			newUserBalances,
+			users,
+		),
 	};
 }
 
 /**
- * 残りの精算必要額を計算
- * userBalancesから直接計算（過去のsettlementは既にbalanceに反映済み）
- * 内部関数: 外部から直接呼ばないこと
- */
-function calculateRemainingSettlements(
-	userBalances: NonNullable<Aggregation["userBalances"]>,
-	users: GroupDocument["users"],
-): Settlement[] {
-	// 現在のbalanceから精算を計算
-	return calculateTheoreticalSettlements(userBalances, users);
-}
-
-/**
  * 理論的な精算を計算（債権者と債務者をマッチング）
+ * userBalancesから直接計算（過去のsettlementは既にbalanceに反映済み）
  */
 function calculateTheoreticalSettlements(
 	userBalances: NonNullable<Aggregation["userBalances"]>,
@@ -218,14 +215,14 @@ function calculateTheoreticalSettlements(
 
 	// 債権者（プラス残高）と債務者（マイナス残高）を分離
 	const creditors = users
-		.filter((user) => (userBalances[user.id]?.balance || 0) > 0.01)
+		.filter((user) => (userBalances[user.id]?.balance || 0) > 0)
 		.sort(
 			(a, b) =>
 				(userBalances[b.id]?.balance || 0) - (userBalances[a.id]?.balance || 0),
 		);
 
 	const debtors = users
-		.filter((user) => (userBalances[user.id]?.balance || 0) < -0.01)
+		.filter((user) => (userBalances[user.id]?.balance || 0) < 0)
 		.sort(
 			(a, b) =>
 				(userBalances[a.id]?.balance || 0) - (userBalances[b.id]?.balance || 0),
@@ -247,14 +244,14 @@ function calculateTheoreticalSettlements(
 		let debtAmount = Math.abs(debtor.balance);
 
 		for (const creditor of remainingCreditors) {
-			if (debtAmount <= 0.01 || creditor.balance <= 0.01) continue;
+			if (debtAmount <= 0 || creditor.balance <= 0) continue;
 
 			const settlementAmount = Math.min(debtAmount, creditor.balance);
 
 			settlements.push({
 				fromUserId: debtor.userId,
 				toUserId: creditor.userId,
-				amount: Math.round(settlementAmount),
+				amount: settlementAmount,
 			});
 
 			debtAmount -= settlementAmount;

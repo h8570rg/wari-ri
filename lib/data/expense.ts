@@ -141,14 +141,12 @@ export async function updateExpense({
 
 	await runTransaction(db, async (transaction) => {
 		// 1. 現在のgroupデータとexpenseを取得
-		const [groupDoc, expenseDoc] = await Promise.all([
-			transaction.get(groupRef),
-			transaction.get(expenseRef),
-		]);
-
+		const groupDoc = await transaction.get(groupRef);
 		if (!groupDoc.exists()) {
 			throw new Error("Group not found");
 		}
+
+		const expenseDoc = await transaction.get(expenseRef);
 		if (!expenseDoc.exists()) {
 			throw new Error("Expense not found");
 		}
@@ -194,14 +192,12 @@ export async function deleteExpense(groupId: string, expenseId: string) {
 
 	await runTransaction(db, async (transaction) => {
 		// 1. 現在のgroupデータとexpenseを取得
-		const [groupDoc, expenseDoc] = await Promise.all([
-			transaction.get(groupRef),
-			transaction.get(expenseRef),
-		]);
-
+		const groupDoc = await transaction.get(groupRef);
 		if (!groupDoc.exists()) {
 			throw new Error("Group not found");
 		}
+
+		const expenseDoc = await transaction.get(expenseRef);
 		if (!expenseDoc.exists()) {
 			throw new Error("Expense not found");
 		}
