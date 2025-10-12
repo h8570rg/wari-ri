@@ -31,12 +31,8 @@ export function ActivityHistoryList({
 
 	const handleLoadMore = async () => {
 		setLoading(true);
-		try {
-			const allActivities = await getAllActivities(group.id);
-			setActivities(allActivities);
-		} finally {
-			setLoading(false);
-		}
+		const allActivities = await getAllActivities(group.id);
+		setActivities(allActivities);
 	};
 
 	return (
