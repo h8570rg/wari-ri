@@ -36,7 +36,7 @@ export function EditExpenseForm({ group, expense }: Props) {
 
 	const form = useForm({
 		initialValues: {
-			amount: String(expense.amount),
+			amount: expense.amount,
 			description: expense.description,
 			payerId: expense.payerId,
 			participantIds: expense.participantIds,
@@ -49,7 +49,7 @@ export function EditExpenseForm({ group, expense }: Props) {
 			groupId: group.id,
 			expenseId: expense.id,
 			payerId: values.payerId,
-			amount: Number(values.amount),
+			amount: values.amount,
 			description: values.description,
 			participantIds: values.participantIds,
 		});
