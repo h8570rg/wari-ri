@@ -1,8 +1,11 @@
 import {
 	collection,
 	doc,
+	getCountFromServer,
 	getDocs,
+	limit,
 	orderBy,
+	type QueryConstraint,
 	type QueryDocumentSnapshot,
 	query,
 	type SnapshotOptions,
@@ -58,11 +61,18 @@ export function getActivitiesCollectionRef(groupId: string) {
 	).withConverter(activityConverter);
 }
 
-export async function getActivities(groupId: string) {
-	const q = query(
-		getActivitiesCollectionRef(groupId),
-		orderBy("createdAt", "desc"),
-	);
+export async function getActivities(groupId: string, limitCount?: number) {
+	const queryConstraints: QueryConstraint[] = [orderBy("createdAt", "desc")];
+	if (limitCount) {
+		queryConstraints.push(limit(limitCount));
+	}
+	const q = query(getActivitiesCollectionRef(groupId), ...queryConstraints);
 	const querySnapshot = await getDocs(q);
 	return querySnapshot.docs.map((doc) => doc.data());
+}
+
+export async function getActivitiesCount(groupId: string) {
+	const q = query(getActivitiesCollectionRef(groupId));
+	const snapshot = await getCountFromServer(q);
+	return snapshot.data().count;
 }
