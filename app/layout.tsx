@@ -6,10 +6,12 @@ import {
 } from "@mantine/core";
 import type { Metadata } from "next";
 import { mPlusRounded1c } from "@/lib/fonts";
+import { baseUrl } from "@/lib/utils/env";
 import "./global.css";
 import { theme } from "@/lib/theme";
 
 export const metadata: Metadata = {
+	metadataBase: new URL(baseUrl),
 	title: "ワリーリ",
 	description: "無料で使える広告無しの割り勘アプリ",
 	applicationName: "ワリーリ",

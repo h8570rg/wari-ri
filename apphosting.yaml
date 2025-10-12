@@ -13,6 +13,8 @@ env:
   # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
   # Grant access to secrets in Cloud Secret Manager.
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
+  - variable: NEXT_PUBLIC_BASE_URL
+    value: https://wari-ri--wari-ri.asia-east1.hosted.app # 実際のApp HostingのURLに置き換えてください
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
     secret: FIREBASE_API_KEY
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
