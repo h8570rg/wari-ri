@@ -1,6 +1,6 @@
 import { Container } from "@mantine/core";
-import { headers } from "next/headers";
 import { PageHeader } from "@/components/page-header";
+import { baseUrl } from "@/lib/utils/env";
 import { ShareContent } from "./_components/share-content";
 
 export default async function GroupSharePage({
@@ -9,10 +9,7 @@ export default async function GroupSharePage({
 	params: Promise<{ id: string }>;
 }) {
 	const { id: groupId } = await params;
-	const headersList = await headers();
-	const host = headersList.get("host") || "";
-	const protocol = headersList.get("x-forwarded-proto") || "http";
-	const shareUrl = `${protocol}://${host}/groups/${groupId}`;
+	const shareUrl = `${baseUrl}/groups/${groupId}`;
 
 	return (
 		<Container>
