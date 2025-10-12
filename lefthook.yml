@@ -1,9 +1,10 @@
 pre-commit:
   parallel: false
-  jobs:
-    - name: "lint"
+  commands:
+    lint:
+      glob: "*.{js,jsx,ts,tsx}"
       run: "npm run lint -- --write {staged_files}"
       stage_fixed: true
 
-    - name: "typecheck"
+    typecheck:
       run: "npm run typecheck"
