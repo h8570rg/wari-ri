@@ -10,6 +10,7 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { IconCurrencyYen } from "@tabler/icons-react";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { ExpenseFormField } from "@/app/groups/[id]/expenses/_components/expense-form-field";
 import type { GroupDocument } from "@/lib/data/group";
@@ -75,9 +76,11 @@ export function NewExpenseForm({ group }: Props) {
 				</ExpenseFormField>
 				<ExpenseFormField supportingText="かかった">
 					<NumberInput
-						placeholder="¥1000"
+						type="tel"
+						placeholder="1000"
+						inputMode="numeric"
 						hideControls
-						prefix="¥"
+						leftSection={<IconCurrencyYen />}
 						{...form.getInputProps("amount")}
 					/>
 				</ExpenseFormField>
