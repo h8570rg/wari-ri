@@ -12,5 +12,5 @@ export async function createGroup({
 }) {
 	const groupId = await _createGroup({ name, userNames });
 
-	redirect(`/groups/${groupId}`);
+	redirect(`/groups/${groupId}/share`);
 }
