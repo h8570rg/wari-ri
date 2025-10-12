@@ -33,7 +33,7 @@ export default async function GroupPage({ params }: Props) {
 				fullWidth
 				mt="xl"
 			>
-				建て替えを追加
+				建て替え記録を追加
 			</Button>
 			<Stack gap="60px" mt="xl">
 				{activities.length > 0 && group.aggregation ? (
@@ -47,7 +47,7 @@ export default async function GroupPage({ params }: Props) {
 					</>
 				) : (
 					<Alert
-						title="「建て替えを追加」ボタンから、建て替え記録を追加しましょう"
+						title="「建て替え記録を追加」ボタンから、建て替え記録を追加しましょう"
 						icon={<IconInfoCircle size="1rem" />}
 					/>
 				)}
