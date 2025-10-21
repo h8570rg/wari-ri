@@ -30,7 +30,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.6",
-		"@types/node": "22.18.11",
+		"@types/node": "22.18.12",
 		"@types/react": "19.2.2",
 		"@types/react-dom": "19.2.2",
 		"lefthook": "1.13.6",
@@ -44,7 +44,7 @@
 		"npm": ">=10"
 	},
 	"volta": {
-		"node": "22.20.0",
+		"node": "22.21.0",
 		"npm": "11.6.2"
 	}
 }
