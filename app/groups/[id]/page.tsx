@@ -1,7 +1,7 @@
 import { Alert, Button, Container, Stack } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import type { Route } from "next";
-import NextLink from "next/link";
+import { NextLink } from "@/components/next-link";
 import { PageHeader } from "@/components/page-header";
 import { getActivities } from "@/lib/data/activity";
 import { getGroup } from "@/lib/data/group";

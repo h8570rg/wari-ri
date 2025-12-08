@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	ActionIcon,
 	Center,
@@ -10,8 +8,8 @@ import {
 	Title,
 } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
-import NextLink from "next/link";
 import type { ComponentProps } from "react";
+import { NextLink } from "@/components/next-link";
 
 export function PageHeader({
 	title,

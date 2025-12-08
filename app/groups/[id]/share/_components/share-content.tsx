@@ -3,7 +3,7 @@
 import { Button, Center, CopyButton, Stack, Text, Title } from "@mantine/core";
 import { IconCircleCheckFilled, IconCopy } from "@tabler/icons-react";
 import type { Route } from "next";
-import NextLink from "next/link";
+import { NextLink } from "@/components/next-link";
 
 export function ShareContent({
 	groupId,
