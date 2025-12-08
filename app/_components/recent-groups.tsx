@@ -2,8 +2,8 @@
 
 import { Anchor, Box, type BoxProps, Group, Text } from "@mantine/core";
 import type { Route } from "next";
-import NextLink from "next/link";
 import { useEffect, useState } from "react";
+import { NextLink } from "@/components/next-link";
 import { getGroup } from "@/lib/data/group";
 import {
 	getRecentGroups,

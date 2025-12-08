@@ -2,7 +2,7 @@
 
 import { Box, Button, Container, Image, Stack, Text } from "@mantine/core";
 import NextImage from "next/image";
-import NextLink from "next/link";
+import { NextLink } from "@/components/next-link";
 import catImage from "./_assets/cat.png";
 import { RecentGroups } from "./_components/recent-groups";
 

@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
-import NextLink from "next/link";
+import { NextLink } from "@/components/next-link";
 import type { GroupDocument } from "@/lib/data/group";
 
 export async function GroupInfo({ group }: { group: GroupDocument }) {

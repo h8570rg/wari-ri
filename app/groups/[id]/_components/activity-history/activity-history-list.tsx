@@ -3,8 +3,8 @@
 import { ActionIcon, Button, Divider, Flex, Stack, Text } from "@mantine/core";
 import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
-import NextLink from "next/link";
 import { Fragment, useState } from "react";
+import { NextLink } from "@/components/next-link";
 import type { ActivityDocument } from "@/lib/data/activity";
 import type { GroupDocument } from "@/lib/data/group";
 import { getAllActivities } from "./actions";
