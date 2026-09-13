@@ -9,9 +9,8 @@ import {
 	Stack,
 	TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { schemaResolver, useForm } from "@mantine/form";
 import { IconCurrencyYen } from "@tabler/icons-react";
-import { zod4Resolver } from "mantine-form-zod-resolver";
 import { ExpenseFormField } from "@/app/groups/[id]/expenses/_components/expense-form-field";
 import type { GroupDocument } from "@/lib/data/group";
 import { expenseSchema } from "@/lib/schema";
@@ -29,7 +28,7 @@ export function NewExpenseForm({ group }: Props) {
 			payerId: "",
 			participantIds: [] as string[],
 		},
-		validate: zod4Resolver(expenseSchema),
+		validate: schemaResolver(expenseSchema, { sync: true }),
 	});
 
 	const handleSubmit = async (values: typeof form.values) => {
