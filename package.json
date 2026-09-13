@@ -38,13 +38,5 @@
 		"postcss-preset-mantine": "1.18.0",
 		"postcss-simple-vars": "7.0.1",
 		"typescript": "5.9.3"
-	},
-	"engines": {
-		"node": ">=22",
-		"npm": ">=10"
-	},
-	"volta": {
-		"node": "24.21.0",
-		"npm": "11.19.1"
 	}
 }
