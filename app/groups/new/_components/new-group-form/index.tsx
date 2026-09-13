@@ -1,8 +1,7 @@
 "use client";
 
 import { Button, Group, Pill, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { schemaResolver, useForm } from "@mantine/form";
 import { newGroupSchema, userNameSchema } from "@/lib/schema";
 import { createGroup } from "./actions";
 
@@ -11,7 +10,7 @@ export function NewGroupForm() {
 		initialValues: {
 			userName: "",
 		},
-		validate: zod4Resolver(userNameSchema),
+		validate: schemaResolver(userNameSchema, { sync: true }),
 	});
 
 	const form = useForm({
@@ -19,7 +18,7 @@ export function NewGroupForm() {
 			name: "",
 			userNames: [] as string[],
 		},
-		validate: zod4Resolver(newGroupSchema),
+		validate: schemaResolver(newGroupSchema, { sync: true }),
 	});
 
 	const handleSubmit = async (values: typeof form.values) => {

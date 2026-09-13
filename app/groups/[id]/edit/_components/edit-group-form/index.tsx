@@ -1,10 +1,9 @@
 "use client";
 
 import { Button, Flex, Group, Modal, Pill, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { schemaResolver, useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit } from "@tabler/icons-react";
-import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import type { GroupDocument } from "@/lib/data/group";
 import { editGroupSchema, userNameSchema } from "@/lib/schema";
@@ -23,14 +22,14 @@ export function EditGroupForm({ group }: Props) {
 		initialValues: {
 			userName: "",
 		},
-		validate: zod4Resolver(userNameSchema),
+		validate: schemaResolver(userNameSchema, { sync: true }),
 	});
 
 	const editUserNameForm = useForm({
 		initialValues: {
 			userName: "",
 		},
-		validate: zod4Resolver(userNameSchema),
+		validate: schemaResolver(userNameSchema, { sync: true }),
 	});
 
 	const form = useForm({
@@ -38,7 +37,7 @@ export function EditGroupForm({ group }: Props) {
 			name: group.name,
 			users: group.users,
 		},
-		validate: zod4Resolver(editGroupSchema),
+		validate: schemaResolver(editGroupSchema, { sync: true }),
 	});
 
 	const handleSubmit = async (values: typeof form.values) => {
@@ -137,7 +136,7 @@ export function EditGroupForm({ group }: Props) {
 					<Pill.Group mt="xs">
 						{form.values.users.map((user, index) => (
 							<Pill
-								key={`${user.id}-${index}`}
+								key={user.id}
 								size="lg"
 								onClick={() => handleEditMember(index, user.name)}
 							>
