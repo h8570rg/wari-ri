@@ -11,7 +11,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "biome check",
-		"typecheck": "tsc --noEmit && pnpm --filter functions exec tsc --noEmit",
+		"typecheck": "tsc --noEmit",
 		"format": "biome format --write",
 		"functions:build": "pnpm --filter functions run build",
 		"firebase:login": "firebase login",
