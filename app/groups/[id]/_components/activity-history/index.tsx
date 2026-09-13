@@ -1,20 +1,48 @@
-import { Box, Title } from "@mantine/core";
-import { getActivities, getActivitiesCount } from "@/lib/data/activity";
-import { getGroup } from "@/lib/data/group";
+"use client";
+
+import { Alert, Box, Title } from "@mantine/core";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import {
+	ACTIVITY_LIVE_LIMIT,
+	type ActivityDocument,
+	subscribeActivities,
+} from "@/lib/data/activity";
+import type { GroupDocument } from "@/lib/data/group";
 import { ActivityHistoryList } from "./activity-history-list";
 
 type Props = {
 	groupId: string;
+	initialActivities: ActivityDocument[];
+	initialActivitiesCount: number;
+	group: GroupDocument;
 };
 
-const INITIAL_LIMIT = 10;
+export function ActivityHistory({
+	groupId,
+	initialActivities,
+	initialActivitiesCount,
+	group,
+}: Props) {
+	const [activities, setActivities] = useState(initialActivities);
+	const [expanded, setExpanded] = useState(false);
 
-export async function ActivityHistory({ groupId }: Props) {
-	const [initialActivities, totalCount, group] = await Promise.all([
-		getActivities(groupId, INITIAL_LIMIT),
-		getActivitiesCount(groupId),
-		getGroup(groupId),
-	]);
+	useEffect(() => {
+		return subscribeActivities(
+			groupId,
+			setActivities,
+			expanded ? undefined : ACTIVITY_LIVE_LIMIT,
+		);
+	}, [groupId, expanded]);
+
+	if (activities.length === 0) {
+		return (
+			<Alert
+				title="「建て替え記録を追加」ボタンから、建て替え記録を追加しましょう"
+				icon={<IconInfoCircle size="1rem" />}
+			/>
+		);
+	}
 
 	return (
 		<Box component="section">
@@ -22,8 +50,10 @@ export async function ActivityHistory({ groupId }: Props) {
 				履歴
 			</Title>
 			<ActivityHistoryList
-				initialActivities={initialActivities}
-				totalCount={totalCount}
+				activities={activities}
+				totalCount={initialActivitiesCount}
+				expanded={expanded}
+				onLoadMore={() => setExpanded(true)}
 				group={group}
 			/>
 		</Box>
