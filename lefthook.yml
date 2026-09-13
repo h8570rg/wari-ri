@@ -3,8 +3,8 @@ pre-commit:
   commands:
     lint:
       glob: "*.{js,jsx,ts,tsx}"
-      run: "npm run lint -- --write {staged_files}"
+      run: "pnpm lint -- --write {staged_files}"
       stage_fixed: true
 
     typecheck:
-      run: "npm run typecheck"
+      run: "pnpm typecheck"

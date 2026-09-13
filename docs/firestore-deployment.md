@@ -31,7 +31,7 @@
 ### 環境別デプロイ戦略
 
 - **本番環境 (wari-ri)**: mainブランチへのマージ時に自動デプロイ（GitHub Actions）
-- **開発環境 (wari-ri-dev)**: ローカルから手動デプロイ（npmスクリプト経由）
+- **開発環境 (wari-ri-dev)**: ローカルから手動デプロイ（pnpmスクリプト経由）
 
 ### 事前準備
 
@@ -47,16 +47,16 @@ package.jsonに定義されたスクリプトを使用してデプロイしま�
 
 ```bash
 # Firestore Rules + Indexes の両方
-npm run deploy:dev:firestore
+pnpm deploy:dev:firestore
 
 # Rulesのみ
-npm run deploy:dev:rules
+pnpm deploy:dev:rules
 
 # Indexesのみ
-npm run deploy:dev:indexes
+pnpm deploy:dev:indexes
 
 # すべて（Functions + Firestore Rules + Indexes）
-npm run deploy:dev
+pnpm deploy:dev
 ```
 
 ### 本番環境へのデプロイ

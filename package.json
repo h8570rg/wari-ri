@@ -2,6 +2,7 @@
 	"name": "wari-ri",
 	"version": "0.1.0",
 	"private": true,
+	"packageManager": "pnpm@12.4.1",
 	"scripts": {
 		"dev": "next dev --turbopack --port 3002",
 		"build": "next build",
@@ -9,9 +10,9 @@
 		"lint": "biome check",
 		"typecheck": "tsc --noEmit",
 		"format": "biome format --write",
-		"functions:build": "npm run build --prefix functions",
-		"deploy:dev": "npm run functions:build && firebase deploy --only functions,firestore:rules,firestore:indexes --project wari-ri-dev",
-		"deploy:dev:functions": "npm run functions:build && firebase deploy --only functions --project wari-ri-dev",
+		"functions:build": "pnpm --filter functions run build",
+		"deploy:dev": "pnpm functions:build && firebase deploy --only functions,firestore:rules,firestore:indexes --project wari-ri-dev",
+		"deploy:dev:functions": "pnpm functions:build && firebase deploy --only functions --project wari-ri-dev",
 		"deploy:dev:firestore": "firebase deploy --only firestore:rules,firestore:indexes --project wari-ri-dev",
 		"deploy:dev:rules": "firebase deploy --only firestore:rules --project wari-ri-dev",
 		"deploy:dev:indexes": "firebase deploy --only firestore:indexes --project wari-ri-dev"

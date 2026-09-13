@@ -54,14 +54,14 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_prod_app_id_here
 ### 開発時
 
 ```bash
-npm run dev  # 自動的に .env.local を使用
+pnpm dev  # 自動的に .env.local を使用
 ```
 
 ### 本番ビルド
 
 ```bash
-npm run build  # .env.production.local を使用
-npm run start
+pnpm build  # .env.production.local を使用
+pnpm start
 ```
 
 ## 🛡️ セキュリティルール

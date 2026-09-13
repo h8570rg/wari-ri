@@ -76,19 +76,19 @@ firebase login
 
 ```bash
 # すべてをデプロイ（Functions + Firestore Rules + Indexes）
-npm run deploy:dev
+pnpm deploy:dev
 
 # Functionsのみ
-npm run deploy:dev:functions
+pnpm deploy:dev:functions
 
 # Firestore Rules + Indexes
-npm run deploy:dev:firestore
+pnpm deploy:dev:firestore
 
 # Rulesのみ
-npm run deploy:dev:rules
+pnpm deploy:dev:rules
 
 # Indexesのみ
-npm run deploy:dev:indexes
+pnpm deploy:dev:indexes
 ```
 
 ### デプロイフロー
