@@ -52,8 +52,8 @@ importers:
         specifier: 19.3.0
         version: 19.3.0(@types/react@19.3.0)
       firebase-tools:
-        specifier: 15.29.0
-        version: 15.29.0(@types/node@24.13.4)(supports-color@7.2.0)
+        specifier: 15.30.0
+        version: 15.30.0(@types/node@24.13.4)(supports-color@7.2.0)
       lefthook:
         specifier: 2.1.12
         version: 2.1.12
@@ -1680,8 +1680,8 @@ packages:
     resolution: {integrity: sha512-S8KoZgRZN+a5rNwqTxlZZePjT/4cnm0ROV70LedRHZ0p8u9fRID0hJUZQpkKLzro8LfmC8sx23bY6tVNxv8pQA==}
     engines: {node: '>= 18.0.0'}
 
-  firebase-tools@15.29.0:
-    resolution: {integrity: sha512-9v59oeU7seYNjMUykhQqodXl2J08QVVxVsxgJ0SycnX41xSA7nM4BboAdAK85z0tLSm6PsHjoNqop3cKAe4uaA==}
+  firebase-tools@15.30.0:
+    resolution: {integrity: sha512-TlbNksehD+78BAsEvFHbFSSggO5Q1XtNY5cobAj1R0lm7gBU2YM4+hq7p+SSctJ4KytKcm3fUlodrn/j315Yzw==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -5052,7 +5052,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@15.29.0(@types/node@24.13.4)(supports-color@7.2.0):
+  firebase-tools@15.30.0(@types/node@24.13.4)(supports-color@7.2.0):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
