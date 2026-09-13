@@ -3,10 +3,12 @@ import {
 	deleteDoc,
 	doc,
 	getDoc,
+	onSnapshot,
 	type QueryDocumentSnapshot,
 	type SnapshotOptions,
 	serverTimestamp,
 	setDoc,
+	type Unsubscribe,
 	updateDoc,
 	type WithFieldValue,
 } from "firebase/firestore";
@@ -52,10 +54,12 @@ export const groupConverter = {
 			...data,
 			createdAt: data.createdAt.toDate(),
 			updatedAt: data.updatedAt.toDate(),
-			aggregation: {
-				...data.aggregation,
-				lastCalculatedAt: data.aggregation?.lastCalculatedAt.toDate(),
-			},
+			aggregation: data.aggregation
+				? {
+						...data.aggregation,
+						lastCalculatedAt: data.aggregation.lastCalculatedAt?.toDate(),
+					}
+				: undefined,
 		} as GroupDocument;
 	},
 };
@@ -113,4 +117,16 @@ export async function deleteGroup(groupId: string) {
 
 export function getGroupDocRef(groupId: string) {
 	return doc(db, groupCollectionName, groupId).withConverter(groupConverter);
+}
+
+export function subscribeGroup(
+	groupId: string,
+	onData: (group: GroupDocument) => void,
+): Unsubscribe {
+	return onSnapshot(getGroupDocRef(groupId), (snapshot) => {
+		const data = snapshot.data();
+		if (data) {
+			onData(data);
+		}
+	});
 }

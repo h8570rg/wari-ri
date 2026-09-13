@@ -4,11 +4,13 @@ import {
 	getCountFromServer,
 	getDocs,
 	limit,
+	onSnapshot,
 	orderBy,
 	type QueryConstraint,
 	type QueryDocumentSnapshot,
 	query,
 	type SnapshotOptions,
+	type Unsubscribe,
 	type WithFieldValue,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -18,6 +20,8 @@ import { groupCollectionName } from "./group";
 import type { SettlementDocument } from "./settlement";
 
 const activitySubcollectionName = "activities";
+
+export const ACTIVITY_LIVE_LIMIT = 10;
 
 export type ActivityDocument = BaseDocument &
 	(ExpenseDocument | SettlementDocument);
@@ -61,14 +65,30 @@ export function getActivitiesCollectionRef(groupId: string) {
 	).withConverter(activityConverter);
 }
 
-export async function getActivities(groupId: string, limitCount?: number) {
+function getActivitiesQuery(groupId: string, limitCount?: number) {
 	const queryConstraints: QueryConstraint[] = [orderBy("createdAt", "desc")];
 	if (limitCount) {
 		queryConstraints.push(limit(limitCount));
 	}
-	const q = query(getActivitiesCollectionRef(groupId), ...queryConstraints);
-	const querySnapshot = await getDocs(q);
+	return query(getActivitiesCollectionRef(groupId), ...queryConstraints);
+}
+
+export async function getActivities(groupId: string, limitCount?: number) {
+	const querySnapshot = await getDocs(getActivitiesQuery(groupId, limitCount));
 	return querySnapshot.docs.map((doc) => doc.data());
+}
+
+export function subscribeActivities(
+	groupId: string,
+	onData: (activities: ActivityDocument[]) => void,
+	limitCount?: number,
+): Unsubscribe {
+	return onSnapshot(
+		getActivitiesQuery(groupId, limitCount),
+		(querySnapshot) => {
+			onData(querySnapshot.docs.map((doc) => doc.data()));
+		},
+	);
 }
 
 export async function getActivitiesCount(groupId: string) {

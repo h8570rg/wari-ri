@@ -1,9 +1,12 @@
-import { Alert, Button, Container, Stack } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { Button, Container, Stack } from "@mantine/core";
 import type { Route } from "next";
 import { NextLink } from "@/components/next-link";
 import { PageHeader } from "@/components/page-header";
-import { getActivities } from "@/lib/data/activity";
+import {
+	ACTIVITY_LIVE_LIMIT,
+	getActivities,
+	getActivitiesCount,
+} from "@/lib/data/activity";
 import { getGroup } from "@/lib/data/group";
 import { ActivityHistory } from "./_components/activity-history";
 import { GroupInfo } from "./_components/group-info";
@@ -16,9 +19,10 @@ type Props = {
 
 export default async function GroupPage({ params }: Props) {
 	const { id } = await params;
-	const [group, activities] = await Promise.all([
+	const [group, activities, activitiesCount] = await Promise.all([
 		getGroup(id),
-		getActivities(id),
+		getActivities(id, ACTIVITY_LIVE_LIMIT),
+		getActivitiesCount(id),
 	]);
 
 	return (
@@ -36,21 +40,13 @@ export default async function GroupPage({ params }: Props) {
 				建て替え記録を追加
 			</Button>
 			<Stack gap="60px" mt="xl">
-				{activities.length > 0 && group.aggregation ? (
-					<>
-						<ActivityHistory groupId={id} />
-						<SettlementSummary
-							groupId={id}
-							users={group.users}
-							aggregation={group.aggregation}
-						/>
-					</>
-				) : (
-					<Alert
-						title="「建て替え記録を追加」ボタンから、建て替え記録を追加しましょう"
-						icon={<IconInfoCircle size="1rem" />}
-					/>
-				)}
+				<ActivityHistory
+					groupId={id}
+					initialActivities={activities}
+					initialActivitiesCount={activitiesCount}
+					group={group}
+				/>
+				<SettlementSummary groupId={id} initialGroup={group} />
 			</Stack>
 		</Container>
 	);

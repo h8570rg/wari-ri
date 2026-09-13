@@ -3,37 +3,30 @@
 import { ActionIcon, Button, Divider, Flex, Stack, Text } from "@mantine/core";
 import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { NextLink } from "@/components/next-link";
 import type { ActivityDocument } from "@/lib/data/activity";
 import type { GroupDocument } from "@/lib/data/group";
-import { getAllActivities } from "./actions";
 import { AvatarGroup } from "./avatar-group";
 import { SettlementDeleteButton } from "./settlement-delete-button";
 
 type Props = {
-	initialActivities: ActivityDocument[];
+	activities: ActivityDocument[];
 	totalCount: number;
+	expanded: boolean;
+	onLoadMore: () => void;
 	group: GroupDocument;
 };
 
 export function ActivityHistoryList({
-	initialActivities,
+	activities,
 	totalCount,
+	expanded,
+	onLoadMore,
 	group,
 }: Props) {
-	const [activities, setActivities] =
-		useState<ActivityDocument[]>(initialActivities);
-	const [loading, setLoading] = useState(false);
-
-	const hasMore = totalCount > activities.length;
 	const remainingCount = totalCount - activities.length;
-
-	const handleLoadMore = async () => {
-		setLoading(true);
-		const allActivities = await getAllActivities(group.id);
-		setActivities(allActivities);
-	};
+	const hasMore = !expanded && remainingCount > 0;
 
 	return (
 		<Stack gap="md">
@@ -49,9 +42,7 @@ export function ActivityHistoryList({
 					mx="auto"
 					variant="light"
 					color="secondary"
-					onClick={handleLoadMore}
-					loading={loading}
-					disabled={loading}
+					onClick={onLoadMore}
 				>
 					更に{remainingCount}件を表示する
 				</Button>
