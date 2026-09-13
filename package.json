@@ -2,7 +2,10 @@
 	"name": "wari-ri",
 	"version": "0.1.0",
 	"private": true,
-	"packageManager": "pnpm@12.4.1",
+	"packageManager": "pnpm@11.27.0",
+	"engines": {
+		"node": "24"
+	},
 	"scripts": {
 		"dev": "next dev --turbopack --port 3002",
 		"build": "next build",
