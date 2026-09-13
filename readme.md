@@ -5,8 +5,9 @@
 ## 開発
 
 ```bash
-npm install
-npm run dev
+mise install
+pnpm install
+pnpm dev
 ```
 
 ## デプロイ
@@ -17,13 +18,13 @@ npm run dev
 
 ```bash
 # すべて（Functions + Firestore）
-npm run deploy:dev
+pnpm deploy:dev
 
 # Functionsのみ
-npm run deploy:dev:functions
+pnpm deploy:dev:functions
 
 # Firestoreのみ
-npm run deploy:dev:firestore
+pnpm deploy:dev:firestore
 ```
 
 ### 本番環境 (wari-ri)

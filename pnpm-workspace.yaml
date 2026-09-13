@@ -1,0 +1,11 @@
+packages:
+  - "functions"
+
+sharedWorkspaceLockfile: false
+
+allowBuilds:
+  "@firebase/util": true
+  "@parcel/watcher": false
+  lefthook: true
+  protobufjs: false
+  unrs-resolver: false
