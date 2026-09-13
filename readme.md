@@ -14,9 +14,11 @@ pnpm dev
 
 ### 開発環境 (wari-ri-dev)
 
-ローカルから手動でデプロイします：
+ローカルから手動でデプロイします。初回（または認証エラー時）は先にログインしてください：
 
 ```bash
+pnpm firebase:login
+
 # すべて（Functions + Firestore）
 pnpm deploy:dev
 
