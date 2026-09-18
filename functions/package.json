@@ -14,7 +14,7 @@
 	},
 	"main": "lib/index.js",
 	"dependencies": {
-		"firebase-functions": "7.3.2"
+		"firebase-functions": "7.4.0"
 	},
 	"devDependencies": {
 		"typescript": "7.0.2"
