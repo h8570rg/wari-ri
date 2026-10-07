@@ -2,7 +2,7 @@
 	"name": "wari-ri",
 	"version": "0.1.0",
 	"private": true,
-	"packageManager": "pnpm@11.28.3",
+	"packageManager": "pnpm@11.28.4",
 	"engines": {
 		"node": "24"
 	},
