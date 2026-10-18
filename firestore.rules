@@ -1,8 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
+    // 認証なしの共有リンク方式のため、グループIDを知っていることをアクセス条件とする。
+    // groups の list（一覧取得）は許可しない（全グループIDの列挙を防ぐ）。
+    match /groups/{groupId} {
+      allow get, create, update, delete: if true;
+
+      // 既知のグループ配下のアクティビティのみ読み書き可能。
+      // ネストした明示パスのみに一致させ、コレクショングループクエリは許可しない。
+      match /activities/{activityId} {
+        allow read, write: if true;
+      }
     }
+
+    // 上記以外のパスはすべて拒否（ルールに一致しないものはデフォルトで拒否される）
   }
 }
