@@ -8,4 +8,5 @@ allowBuilds:
   "@parcel/watcher": false
   lefthook: true
   protobufjs: false
+  re2: false
   unrs-resolver: false
