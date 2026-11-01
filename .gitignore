@@ -42,3 +42,12 @@ next-env.d.ts
 
 # vscode
 .vscode
+
+# playwright
+/test-results/
+/blob-report/
+/playwright/.cache/
+
+# firebase
+firebase-debug.log
+firestore-debug.log

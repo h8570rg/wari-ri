@@ -10,6 +10,16 @@ pnpm install
 pnpm dev
 ```
 
+## E2Eテスト
+
+Playwright と Firestore エミュレーター（Java 21 以上が必要）で実行します。実際の Firebase プロジェクトには接続しません。
+
+```bash
+pnpm exec playwright install chromium # 初回のみ
+pnpm test:e2e
+pnpm test:e2e:ui # UIモード
+```
+
 ## デプロイ
 
 ### 開発環境 (wari-ri-dev)

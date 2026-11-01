@@ -13,6 +13,8 @@
 		"lint": "biome check",
 		"typecheck": "tsc --noEmit",
 		"format": "biome format --write",
+		"test:e2e": "firebase emulators:exec --only firestore --project demo-wari-ri \"playwright test\"",
+		"test:e2e:ui": "firebase emulators:exec --only firestore --project demo-wari-ri \"playwright test --ui\"",
 		"functions:build": "pnpm --filter functions run build",
 		"firebase:login": "firebase login",
 		"deploy:dev": "pnpm functions:build && firebase deploy --only functions,firestore:rules,firestore:indexes --project wari-ri-dev",
@@ -34,6 +36,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.6.4",
+		"@playwright/test": "1.64.1",
 		"@types/node": "24.19.2",
 		"@types/react": "19.3.0",
 		"@types/react-dom": "19.3.0",
