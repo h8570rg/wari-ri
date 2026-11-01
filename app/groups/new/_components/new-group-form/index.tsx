@@ -2,10 +2,13 @@
 
 import { Button, Group, Pill, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
+import { useRef } from "react";
 import { newGroupSchema, userNameSchema } from "@/lib/schema";
 import { createGroup } from "./actions";
 
 export function NewGroupForm() {
+	const userNameInputRef = useRef<HTMLInputElement>(null);
+
 	const userNameForm = useForm({
 		initialValues: {
 			userName: "",
@@ -40,6 +43,7 @@ export function NewGroupForm() {
 				mt="md"
 				label="メンバー"
 				placeholder="やまだ"
+				ref={userNameInputRef}
 				{...userNameForm.getInputProps("userName")}
 				error={
 					userNameForm.getInputProps("userName").error ?? form.errors.userNames
@@ -54,6 +58,8 @@ export function NewGroupForm() {
 						{children}
 						<Button
 							onClick={() => {
+								// 続けて入力できるよう、結果にかかわらず入力欄へフォーカスを戻す
+								userNameInputRef.current?.focus();
 								const userNameValue = userNameForm.getValues().userName;
 								const userNamesValue = form.getValues().userNames;
 								if (userNamesValue.includes(userNameValue)) {
