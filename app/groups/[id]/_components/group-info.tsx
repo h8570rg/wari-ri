@@ -36,7 +36,7 @@ export async function GroupInfo({ group }: { group: GroupDocument }) {
 					</Badge>
 				))}
 			</Group>
-			{group.aggregation?.totalExpenses && (
+			{!!group.aggregation?.totalExpenses && (
 				<Text mt="sm" size="xs" c="dimmed">
 					総支出額: ¥{group.aggregation?.totalExpenses?.toLocaleString()}
 				</Text>

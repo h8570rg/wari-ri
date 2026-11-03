@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import { NextLink } from "@/components/next-link";
 import type { ActivityDocument } from "@/lib/data/activity";
 import type { GroupDocument } from "@/lib/data/group";
+import { formatSignedAmount } from "@/lib/utils/amount";
 import { AvatarGroup } from "./avatar-group";
 import { SettlementDeleteButton } from "./settlement-delete-button";
 
@@ -78,13 +79,26 @@ function ActivityHistoryItem({
 				<Flex align="center" justify="space-between" gap="sm">
 					<Flex align="center" gap="4">
 						<Text fw="500" size="lg">
-							{activity.type === "expense" ? activity.description : "精算"}
+							{activity.type === "settlement" ? "精算" : activity.description}
 						</Text>
 						{activity.type === "expense" && (
 							<ActionIcon
 								component={NextLink}
 								href={
 									`/groups/${group.id}/expenses/${activity.id}/edit` as Route
+								}
+								variant="subtle"
+								color="secondary"
+								size="xs"
+							>
+								<IconPencil />
+							</ActionIcon>
+						)}
+						{activity.type === "result" && (
+							<ActionIcon
+								component={NextLink}
+								href={
+									`/groups/${group.id}/results/${activity.id}/edit` as Route
 								}
 								variant="subtle"
 								color="secondary"
@@ -100,7 +114,9 @@ function ActivityHistoryItem({
 							/>
 						)}
 					</Flex>
-					<Text fw="500">¥{activity.amount.toLocaleString()}</Text>
+					{activity.type !== "result" && (
+						<Text fw="500">¥{activity.amount.toLocaleString()}</Text>
+					)}
 				</Flex>
 				{activity.type === "expense" && (
 					<Flex align="center" gap="1">
@@ -150,6 +166,22 @@ function ActivityHistoryItem({
 						<Text size="sm" c="dimmed">
 							に支払い
 						</Text>
+					</Flex>
+				)}
+				{activity.type === "result" && (
+					<Flex align="center" gap="sm" wrap="wrap">
+						{activity.entries
+							.toSorted((a, b) => b.amount - a.amount)
+							.map((entry) => (
+								<Flex key={entry.userId} align="center" gap="4">
+									<AvatarGroup
+										participants={[
+											{ id: entry.userId, name: getUserName(entry.userId) },
+										]}
+									/>
+									<Text size="sm">{formatSignedAmount(entry.amount)}</Text>
+								</Flex>
+							))}
 					</Flex>
 				)}
 			</Stack>

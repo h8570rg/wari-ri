@@ -1,4 +1,4 @@
-import { Button, Container, Stack } from "@mantine/core";
+import { Button, Container, Group, Stack } from "@mantine/core";
 import type { Route } from "next";
 import { NextLink } from "@/components/next-link";
 import { PageHeader } from "@/components/page-header";
@@ -30,15 +30,28 @@ export default async function GroupPage({ params }: Props) {
 			<PageHeader title="グループ詳細" backLinkHref="/" showNavbar={false} />
 			<RecentGroupTracker groupId={id} groupName={group.name} />
 			<GroupInfo group={group} />
-			<Button
-				component={NextLink}
-				href={`/groups/${id}/expenses/new` as Route}
-				size="lg"
-				fullWidth
-				mt="xl"
-			>
-				建て替え記録を追加
-			</Button>
+			<Group mt="lg" gap="xs">
+				<Button
+					flex={1}
+					component={NextLink}
+					href={`/groups/${id}/expenses/new` as Route}
+					size="lg"
+					pl="lg"
+					pr="lg"
+				>
+					建て替え記録
+				</Button>
+				<Button
+					flex={1}
+					component={NextLink}
+					href={`/groups/${id}/results/new` as Route}
+					color="blue"
+					pl="lg"
+					pr="lg"
+				>
+					勝ち負け記録
+				</Button>
+			</Group>
 			<Stack gap="60px" mt="xl">
 				<ActivityHistory
 					groupId={id}

@@ -47,3 +47,37 @@ export const expenseSchema = z.object({
 		.array(z.string())
 		.min(1, { message: "参加者を1人以上選択してください" }),
 });
+
+// 勝ち負け記録用のスキーマ（amountは符号付き。勝ちはプラス、負けはマイナス）
+export const resultSchema = z.object({
+	description: z
+		.string()
+		.min(1, { message: "タイトルを入力してください" })
+		.max(100, { message: "タイトルは100文字以内で入力してください" }),
+	entries: z
+		.array(
+			z.object({
+				userId: z.string(),
+				// 入力値の文字列を数値に変換する（未入力は0円＝不参加）
+				amount: z
+					.string()
+					.regex(/^(-?\d+)?$/, { message: "金額は整数で入力してください" })
+					.transform((amount) => (amount === "" ? 0 : Number(amount))),
+			}),
+		)
+		// 金額の形式エラーがあるとtransform前の文字列が渡ってくるため、エラーがないときだけ検証する
+		.refine(
+			(entries) => entries.filter((entry) => entry.amount !== 0).length >= 2,
+			{
+				message: "2人以上の金額を入力してください",
+				when: (payload) => payload.issues.length === 0,
+			},
+		)
+		.refine(
+			(entries) => entries.reduce((sum, entry) => sum + entry.amount, 0) === 0,
+			{
+				message: "合計が0になるように入力してください",
+				when: (payload) => payload.issues.length === 0,
+			},
+		),
+});

@@ -75,9 +75,7 @@ export function NewExpenseForm({ group }: Props) {
 				</ExpenseFormField>
 				<ExpenseFormField supportingText="かかった">
 					<NumberInput
-						type="tel"
 						placeholder="1000"
-						inputMode="numeric"
 						hideControls
 						leftSection={<IconCurrencyYen />}
 						{...form.getInputProps("amount")}
