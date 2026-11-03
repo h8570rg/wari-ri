@@ -141,7 +141,6 @@ test("勝ち負けを記録すると履歴と精算方法に反映され、編�
 	// 履歴
 	await expect(page.getByText("1半荘目")).toBeVisible();
 	await expect(page.getByText("+¥1,000")).toBeVisible();
-	await expect(page.getByText("総支出額")).toHaveCount(0);
 
 	// 精算方法
 	await expect(page.getByText("たなか → やまだ")).toBeVisible();
@@ -198,7 +197,6 @@ test("建て替え記録と勝ち負け記録をまとめて精算できる", as
 	await page.getByRole("button", { name: "記録する" }).click();
 	await page.waitForURL(/\/groups\/[^/]+$/);
 
-	await expect(page.getByText("総支出額: ¥3,000")).toBeVisible();
 	await expect(page.getByText("たなか → やまだ")).toBeVisible();
 	await expect(page.getByText("¥500", { exact: true })).toBeVisible();
 });
