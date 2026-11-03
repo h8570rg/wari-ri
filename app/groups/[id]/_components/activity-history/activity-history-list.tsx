@@ -5,10 +5,11 @@ import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
 import { Fragment } from "react";
 import { NextLink } from "@/components/next-link";
+import { UserBadge } from "@/components/user-badge";
 import type { ActivityDocument } from "@/lib/data/activity";
 import type { GroupDocument } from "@/lib/data/group";
 import { formatSignedAmount } from "@/lib/utils/amount";
-import { AvatarGroup } from "./avatar-group";
+import { getMemberColor } from "@/lib/utils/member-color";
 import { SettlementDeleteButton } from "./settlement-delete-button";
 
 type Props = {
@@ -59,8 +60,12 @@ function ActivityHistoryItem({
 	activity: ActivityDocument;
 	group: GroupDocument;
 }) {
-	function getUserName(userId: string) {
-		return group.users.find((user) => user.id === userId)?.name || "不明";
+	function getUser(userId: string) {
+		const index = group.users.findIndex((user) => user.id === userId);
+		if (index === -1) {
+			return { name: "不明", color: "gray" };
+		}
+		return { name: group.users[index].name, color: getMemberColor(index) };
 	}
 
 	const isCurrentYear =
@@ -119,67 +124,41 @@ function ActivityHistoryItem({
 					)}
 				</Flex>
 				{activity.type === "expense" && (
-					<Flex align="center" gap="1">
-						<AvatarGroup
-							participants={[
-								{
-									id: activity.payerId,
-									name: getUserName(activity.payerId),
-								},
-							]}
-						/>
+					<Flex align="center" gap="4" wrap="wrap">
+						<UserBadge {...getUser(activity.payerId)} />
 						<Text size="sm" c="dimmed">
 							が
 						</Text>
-						<AvatarGroup
-							participants={activity.participantIds.map((id) => ({
-								id,
-								name: getUserName(id),
-							}))}
-						/>
+						{activity.participantIds.map((id) => (
+							<UserBadge key={id} {...getUser(id)} />
+						))}
 						<Text size="sm" c="dimmed">
 							の分を建て替え
 						</Text>
 					</Flex>
 				)}
 				{activity.type === "settlement" && (
-					<Flex align="center" gap="1">
-						<AvatarGroup
-							participants={[
-								{
-									id: activity.fromUserId,
-									name: getUserName(activity.fromUserId),
-								},
-							]}
-						/>
+					<Flex align="center" gap="4" wrap="wrap">
+						<UserBadge {...getUser(activity.fromUserId)} />
 						<Text size="sm" c="dimmed">
 							が
 						</Text>
-						<AvatarGroup
-							participants={[
-								{
-									id: activity.toUserId,
-									name: getUserName(activity.toUserId),
-								},
-							]}
-						/>
+						<UserBadge {...getUser(activity.toUserId)} />
 						<Text size="sm" c="dimmed">
 							に支払い
 						</Text>
 					</Flex>
 				)}
 				{activity.type === "result" && (
-					<Flex align="center" gap="sm" wrap="wrap">
+					<Flex align="center" columnGap="sm" rowGap="4" wrap="wrap">
 						{activity.entries
 							.toSorted((a, b) => b.amount - a.amount)
 							.map((entry) => (
 								<Flex key={entry.userId} align="center" gap="4">
-									<AvatarGroup
-										participants={[
-											{ id: entry.userId, name: getUserName(entry.userId) },
-										]}
-									/>
-									<Text size="sm">{formatSignedAmount(entry.amount)}</Text>
+									<UserBadge {...getUser(entry.userId)} />
+									<Text size="sm" fw="500">
+										{formatSignedAmount(entry.amount)}
+									</Text>
 								</Flex>
 							))}
 					</Flex>

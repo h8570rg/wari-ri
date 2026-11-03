@@ -1,18 +1,12 @@
-import {
-	ActionIcon,
-	Badge,
-	Box,
-	Flex,
-	Group,
-	Text,
-	Title,
-} from "@mantine/core";
+import { ActionIcon, Box, Flex, Group, Text, Title } from "@mantine/core";
 import { IconPencil } from "@tabler/icons-react";
 import type { Route } from "next";
 import { NextLink } from "@/components/next-link";
+import { UserBadge } from "@/components/user-badge";
 import type { GroupDocument } from "@/lib/data/group";
+import { getMemberColor } from "@/lib/utils/member-color";
 
-export async function GroupInfo({ group }: { group: GroupDocument }) {
+export function GroupInfo({ group }: { group: GroupDocument }) {
 	return (
 		<Box>
 			<Flex align="center" gap="xs">
@@ -30,10 +24,12 @@ export async function GroupInfo({ group }: { group: GroupDocument }) {
 				</ActionIcon>
 			</Flex>
 			<Group mt="xs" gap="6">
-				{group.users.map((user) => (
-					<Badge variant="light" color="secondary" key={user.id}>
-						{user.name}
-					</Badge>
+				{group.users.map((user, index) => (
+					<UserBadge
+						key={user.id}
+						name={user.name}
+						color={getMemberColor(index)}
+					/>
 				))}
 			</Group>
 			{!!group.aggregation?.totalExpenses && (
