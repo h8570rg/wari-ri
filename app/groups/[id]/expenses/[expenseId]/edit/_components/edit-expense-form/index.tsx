@@ -96,16 +96,14 @@ export function EditExpenseForm({ group, expense }: Props) {
 					</ExpenseFormField>
 					<ExpenseFormField supportingText="かかった">
 						<NumberInput
-							type="tel"
 							placeholder="1000"
-							inputMode="numeric"
 							hideControls
 							leftSection={<IconCurrencyYen />}
 							{...form.getInputProps("amount")}
 						/>
 					</ExpenseFormField>
 				</Stack>
-				<Stack mt="xl">
+				<Stack mt="xl" gap="sm">
 					<Button type="submit" fullWidth loading={form.submitting}>
 						更新
 					</Button>

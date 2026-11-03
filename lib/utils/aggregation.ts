@@ -5,6 +5,7 @@ import type {
 	Settlement,
 	UserBalance,
 } from "../data/group";
+import type { ResultDocument } from "../data/result";
 import type { SettlementDocument } from "../data/settlement";
 
 /**
@@ -191,6 +192,51 @@ function applySettlementSubtract(
 }
 
 /**
+ * Result（勝ち負け記録）の差分を既存のaggregationに適用して新しいaggregationを作成
+ * @param multiplier 1で加算、-1で減算
+ */
+function applyResultChange(
+	current: Aggregation,
+	result: Pick<ResultDocument, "entries">,
+	users: GroupDocument["users"],
+	multiplier: 1 | -1,
+): Aggregation {
+	// 既存のuserBalancesをディープコピー
+	const newUserBalances = deepCopyUserBalances(current.userBalances);
+
+	for (const entry of result.entries) {
+		if (!newUserBalances[entry.userId]) {
+			newUserBalances[entry.userId] = {
+				paid: 0,
+				owes: 0,
+				balance: 0,
+			};
+		}
+		// 勝ちは受け取る権利（paid）、負けは支払う義務（owes）として扱う
+		if (entry.amount > 0) {
+			newUserBalances[entry.userId].paid += entry.amount * multiplier;
+		} else {
+			newUserBalances[entry.userId].owes += -entry.amount * multiplier;
+		}
+	}
+
+	// バランスを再計算（全ユーザー）
+	for (const userId in newUserBalances) {
+		newUserBalances[userId].balance =
+			newUserBalances[userId].paid - newUserBalances[userId].owes;
+	}
+
+	return {
+		totalExpenses: current.totalExpenses || 0, // resultは総支出に影響しない
+		userBalances: newUserBalances,
+		remainingSettlements: calculateTheoreticalSettlements(
+			newUserBalances,
+			users,
+		),
+	};
+}
+
+/**
  * 理論的な精算を計算（債権者と債務者をマッチング）
  * userBalancesから直接計算（過去のsettlementは既にbalanceに反映済み）
  */
@@ -309,4 +355,42 @@ export function calculateAggregationForDeleteSettlement(
 ): Aggregation {
 	const aggregation = currentAggregation || createEmptyAggregation();
 	return applySettlementSubtract(aggregation, settlement, users);
+}
+
+/**
+ * Result追加時のaggregation更新を計算
+ */
+export function calculateAggregationForAddResult(
+	currentAggregation: Aggregation | undefined,
+	result: Pick<ResultDocument, "entries">,
+	users: GroupDocument["users"],
+): Aggregation {
+	const aggregation = currentAggregation || createEmptyAggregation();
+	return applyResultChange(aggregation, result, users, 1);
+}
+
+/**
+ * Result更新時のaggregation更新を計算
+ */
+export function calculateAggregationForUpdateResult(
+	currentAggregation: Aggregation | undefined,
+	oldResult: Pick<ResultDocument, "entries">,
+	newResult: Pick<ResultDocument, "entries">,
+	users: GroupDocument["users"],
+): Aggregation {
+	const aggregation = currentAggregation || createEmptyAggregation();
+	const afterSubtract = applyResultChange(aggregation, oldResult, users, -1);
+	return applyResultChange(afterSubtract, newResult, users, 1);
+}
+
+/**
+ * Result削除時のaggregation更新を計算
+ */
+export function calculateAggregationForDeleteResult(
+	currentAggregation: Aggregation | undefined,
+	result: Pick<ResultDocument, "entries">,
+	users: GroupDocument["users"],
+): Aggregation {
+	const aggregation = currentAggregation || createEmptyAggregation();
+	return applyResultChange(aggregation, result, users, -1);
 }

@@ -45,7 +45,7 @@ export async function addExpense(
 		amount: number;
 	},
 ) {
-	await page.getByRole("link", { name: "建て替え記録を追加" }).click();
+	await page.getByRole("link", { name: "建て替え記録" }).click();
 	await page.getByPlaceholder("払った人").click();
 	await page.getByRole("option", { name: payer }).click();
 	for (const participant of participants) {

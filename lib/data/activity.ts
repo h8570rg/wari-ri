@@ -17,6 +17,7 @@ import { db } from "../firebase";
 import type { BaseDocument } from ".";
 import type { ExpenseDocument } from "./expense";
 import { groupCollectionName } from "./group";
+import type { ResultDocument } from "./result";
 import type { SettlementDocument } from "./settlement";
 
 const activitySubcollectionName = "activities";
@@ -24,7 +25,7 @@ const activitySubcollectionName = "activities";
 export const ACTIVITY_LIVE_LIMIT = 10;
 
 export type ActivityDocument = BaseDocument &
-	(ExpenseDocument | SettlementDocument);
+	(ExpenseDocument | SettlementDocument | ResultDocument);
 
 const activityConverter = {
 	toFirestore(value: WithFieldValue<ActivityDocument>) {
