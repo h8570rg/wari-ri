@@ -46,6 +46,62 @@ test("未入力・合計が0でない場合は勝ち負けを記録できない"
 	await expect(page).toHaveURL(/\/results\/new$/);
 });
 
+test("合計が0でない場合は勝ちと負けの合計をそろえて補正できる", async ({
+	page,
+}) => {
+	const groupId = await createGroup(page, {
+		name: "補正",
+		members: ["やまだ", "たなか", "さとう", "すずき"],
+	});
+
+	await page.goto(`/groups/${groupId}/results/new`);
+	const adjustButton = page.getByRole("button", { name: "合計を0に調整" });
+
+	// 合計が0のときは押せない
+	await expect(adjustButton).toBeDisabled();
+
+	// 勝ちしかないときは補正できない
+	await amountInput(page, "やまだ").fill("1230");
+	await expect(adjustButton).toBeDisabled();
+
+	// 勝ち1,230円・負け1,250円（すずきは不参加）
+	await amountInput(page, "たなか").fill("-480");
+	await amountInput(page, "さとう").fill("-770");
+	await expect(page.getByText("-¥20", { exact: true })).toBeVisible();
+	await adjustButton.click();
+
+	// 初期位置ではずれを半分ずつ持ち、1,240円にそろえる
+	const dialog = page.getByRole("dialog", { name: "合計を0に調整" });
+	await expect(dialog.getByText("+¥1,240")).toBeVisible();
+
+	// スライダーを動かして閉じても、開き直すと初期位置に戻る
+	const slider = dialog.getByRole("slider", { name: "調整の基準" });
+	await slider.press("End");
+	await expect(dialog.getByText("+¥1,250")).toBeVisible();
+	await page.keyboard.press("Escape");
+	await expect(dialog).toHaveCount(0);
+	await adjustButton.click();
+	await expect(dialog.getByText("+¥1,240")).toBeVisible();
+
+	// 勝ちに合わせると、負け側だけが比例して縮む
+	await slider.press("Home");
+	await expect(dialog.getByText("-¥472")).toBeVisible();
+	await dialog.getByRole("button", { name: "適用する" }).click();
+	await expect(dialog).toHaveCount(0);
+
+	await expect(amountInput(page, "やまだ")).toHaveValue("1230");
+	await expect(amountInput(page, "たなか")).toHaveValue("-472");
+	await expect(amountInput(page, "さとう")).toHaveValue("-758");
+	await expect(amountInput(page, "すずき")).toHaveValue("");
+	await expect(page.getByText("¥0", { exact: true })).toBeVisible();
+	await expect(adjustButton).toBeDisabled();
+
+	await page.getByLabel("タイトル").fill("麻雀");
+	await page.getByRole("button", { name: "記録する" }).click();
+	await page.waitForURL(/\/groups\/[^/]+$/);
+	await expect(page.getByText("-¥472")).toBeVisible();
+});
+
 test("タイトルが長すぎる場合は記録できない", async ({ page }) => {
 	const groupId = await createGroup(page, {
 		name: "入力チェック",
