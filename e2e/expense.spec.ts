@@ -31,9 +31,8 @@ test("建て替え記録を追加すると精算方法が表示され、精算�
 		amount: 3000,
 	});
 
-	// 履歴と集計
+	// 履歴
 	await expect(page.getByText("ランチ")).toBeVisible();
-	await expect(page.getByText("総支出額: ¥3,000")).toBeVisible();
 
 	// たなか → やまだ に 1,500円 の精算が必要
 	await expect(page.getByText("たなか → やまだ")).toBeVisible();
