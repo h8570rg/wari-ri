@@ -22,10 +22,11 @@ test("未入力・合計が0でない場合は勝ち負けを記録できない"
 
 	// 合計・人数のエラーは、金額を変えても次に記録するまで残る
 	await amountInput(page, "やまだ").fill("500");
-	await expect(page.getByText("+¥500", { exact: true })).toBeVisible();
+	await amountInput(page, "たなか").fill("-300");
+	await expect(page.getByText("+¥200", { exact: true })).toBeVisible();
 	await expect(page.getByText("2人以上の金額を入力してください")).toBeVisible();
 
-	// 合計が0でないまま記録
+	// 2人入力したが合計が0でないまま記録
 	await submitButton.click();
 	await expect(page.getByText("2人以上の金額を入力してください")).toHaveCount(
 		0,
@@ -45,9 +46,7 @@ test("未入力・合計が0でない場合は勝ち負けを記録できない"
 	await expect(page).toHaveURL(/\/results\/new$/);
 });
 
-test("タイトルが長すぎる・金額が整数でない場合は記録できない", async ({
-	page,
-}) => {
+test("タイトルが長すぎる場合は記録できない", async ({ page }) => {
 	const groupId = await createGroup(page, {
 		name: "入力チェック",
 		members: ["やまだ", "たなか", "さとう"],
@@ -57,14 +56,11 @@ test("タイトルが長すぎる・金額が整数でない場合は記録で�
 	await page.getByLabel("タイトル").fill("あ".repeat(101));
 	await amountInput(page, "やまだ").fill("500");
 	await amountInput(page, "たなか").fill("-500");
-	// 「-」だけの入力は合計には0として数えられるが、送信時にエラーになる
-	await amountInput(page, "さとう").fill("-");
 	await page.getByRole("button", { name: "記録する" }).click();
 
 	await expect(
 		page.getByText("タイトルは100文字以内で入力してください"),
 	).toBeVisible();
-	await expect(page.getByText("金額は整数で入力してください")).toBeVisible();
 	await expect(page).toHaveURL(/\/results\/new$/);
 });
 
@@ -176,5 +172,23 @@ test.describe("iOS", () => {
 
 		await expect(page.getByText("やまだ → たなか")).toBeVisible();
 		await expect(page.getByText("¥800", { exact: true })).toBeVisible();
+	});
+
+	// iOS以外のNumberInputは小数を入力できないため、type="number"のiOSで確認する
+	test("金額が整数でない場合は記録できない", async ({ page }) => {
+		const groupId = await createGroup(page, {
+			name: "整数チェック",
+			members: ["やまだ", "たなか", "さとう"],
+		});
+
+		await page.goto(`/groups/${groupId}/results/new`);
+		await page.getByLabel("タイトル").fill("ポーカー");
+		await amountInput(page, "やまだ").fill("500");
+		await amountInput(page, "たなか").fill("-500");
+		await amountInput(page, "さとう").fill("1.5");
+		await page.getByRole("button", { name: "記録する" }).click();
+
+		await expect(page.getByText("金額は整数で入力してください")).toBeVisible();
+		await expect(page).toHaveURL(/\/results\/new$/);
 	});
 });
