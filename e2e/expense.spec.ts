@@ -47,3 +47,55 @@ test("建て替え記録を追加すると精算方法が表示され、精算�
 
 	await expect(page.getByText("すべての精算が完了しています")).toBeVisible();
 });
+
+test("精算すると、その精算だけが精算方法から消え、他の精算の相手は変わらない", async ({
+	page,
+}) => {
+	await createGroup(page, {
+		name: "精算の組み合わせ",
+		members: ["あおき", "いとう", "うえだ", "えんどう", "おおの"],
+	});
+	const members = ["あおき", "いとう", "うえだ", "えんどう", "おおの"];
+	await addExpense(page, {
+		payer: "おおの",
+		participants: members,
+		description: "宿代",
+		amount: 5000,
+	});
+	await addExpense(page, {
+		payer: "あおき",
+		participants: members,
+		description: "ガソリン代",
+		amount: 4000,
+	});
+
+	const settlementSection = page
+		.locator("section")
+		.filter({ hasText: "精算方法" });
+	const settlementPairs = settlementSection.getByText(" → ");
+
+	await expect(settlementPairs).toHaveText([
+		"いとう → おおの",
+		"うえだ → おおの",
+		"うえだ → あおき",
+		"えんどう → あおき",
+	]);
+
+	await settlementSection
+		.locator("div")
+		.filter({ hasText: /^いとう → おおの/ })
+		.getByRole("button", { name: "精算する" })
+		.click();
+	const dialog = page.getByRole("dialog", { name: "精算" });
+	await dialog.getByRole("button", { name: "はい、記録する" }).click();
+
+	// 残りの精算は組み直されず、相手と金額がそのまま残る
+	await expect(settlementPairs).toHaveText([
+		"うえだ → おおの",
+		"うえだ → あおき",
+		"えんどう → あおき",
+	]);
+	await expect(settlementSection).toContainText("うえだ → おおの¥1,400");
+	await expect(settlementSection).toContainText("うえだ → あおき¥400");
+	await expect(settlementSection).toContainText("えんどう → あおき¥1,800");
+});
