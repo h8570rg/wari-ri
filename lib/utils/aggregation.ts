@@ -162,11 +162,87 @@ function applySettlementChange(
 	return {
 		totalExpenses: current.totalExpenses || 0, // settlementは総支出に影響しない
 		userBalances: newUserBalances,
-		remainingSettlements: calculateTheoreticalSettlements(
-			newUserBalances,
-			users,
-		),
+		// 精算方法を組み直すと、まだ精算していない行の相手まで入れ替わってしまうため、
+		// 既存の精算方法の該当行だけを書き換える。書き換えられない場合のみ組み直す
+		// （書き換えられない場合は applySettlementToRemainingSettlements を参照）
+		remainingSettlements:
+			applySettlementToRemainingSettlements(
+				current.remainingSettlements || [],
+				settlement,
+				multiplier,
+			) ?? calculateTheoreticalSettlements(newUserBalances, users),
 	};
+}
+
+/**
+ * Settlementの差分を既存の精算方法に適用する
+ *
+ * 精算方法の各行は「fromUserの残高 -amount、toUserの残高 +amount」を表すため、
+ * 同じ組み合わせの行の金額を増減すれば、残高との整合性を保ったまま精算方法を更新できる。
+ *
+ * 次の場合は書き換えられないのでundefinedを返し、呼び出し側で残高から精算方法を組み直す。
+ * 組み直しても残高から作り直すため金額の整合性は保たれるが、他の行の相手が入れ替わることがある。
+ *
+ * - 精算の追加で、同じ組み合わせの行が精算方法にない場合
+ *   例: 確認モーダルを開いている間に別の人が建て替えや勝ち負けを記録し、精算方法が組み直された
+ * - 精算の追加で、行の金額より多い額を精算した場合
+ *   原因は上と同じ。そのまま差し引くと行の金額がマイナスになってしまう
+ * - 精算の削除で、足し戻すと同じ人が払う側と受け取る側の両方に並んでしまう場合
+ *   例: 「青木→広田」の精算を削除するとき、精算方法に「広田→〇〇」や「〇〇→青木」がある
+ *   （精算後に建て替えなどを追加してから古い精算を削除すると起こりうる）。
+ *   金額は合うが表示が不自然になるので、組み直してまとめる
+ *
+ * @param multiplier 1で精算の追加（行の金額を減らす）、-1で精算の削除（行の金額を戻す）
+ * @returns 更新後の精算方法。書き換えられない場合はundefined
+ */
+function applySettlementToRemainingSettlements(
+	remainingSettlements: Settlement[],
+	settlement: Pick<SettlementDocument, "amount" | "fromUserId" | "toUserId">,
+	multiplier: 1 | -1,
+): Settlement[] | undefined {
+	const index = remainingSettlements.findIndex(
+		(s) =>
+			s.fromUserId === settlement.fromUserId &&
+			s.toUserId === settlement.toUserId,
+	);
+
+	if (multiplier === -1) {
+		// 精算の削除: 同じ組み合わせの行に足し戻す。なければ行を追加する
+		// ただし、同じ人が払う側と受け取る側の両方に並んでしまう場合は組み直す
+		const isConflicting = remainingSettlements.some(
+			(s) =>
+				s.toUserId === settlement.fromUserId ||
+				s.fromUserId === settlement.toUserId,
+		);
+		if (isConflicting) {
+			return undefined;
+		}
+		if (index === -1) {
+			return [
+				...remainingSettlements,
+				{
+					fromUserId: settlement.fromUserId,
+					toUserId: settlement.toUserId,
+					amount: settlement.amount,
+				},
+			];
+		}
+		return remainingSettlements.map((s, i) =>
+			i === index ? { ...s, amount: s.amount + settlement.amount } : s,
+		);
+	}
+
+	// 精算の追加: 一覧にない組み合わせや、残りより多い額の場合は書き換えられない
+	if (index === -1 || remainingSettlements[index].amount < settlement.amount) {
+		return undefined;
+	}
+	const amount = remainingSettlements[index].amount - settlement.amount;
+	if (amount === 0) {
+		return remainingSettlements.filter((_, i) => i !== index);
+	}
+	return remainingSettlements.map((s, i) =>
+		i === index ? { ...s, amount } : s,
+	);
 }
 
 /**
